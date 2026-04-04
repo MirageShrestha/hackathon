@@ -435,19 +435,22 @@ export default function TrueNepalMustangMVP() {
               <Mountain className="w-5 h-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground tracking-tight">TrueNepal</h1>
-              <p className="text-xs text-muted-foreground">Kathmandu → Mustang</p>
+            <h1 className="text-xl font-bold text-foreground tracking-tight">TrueNepal</h1>
+              <p className="text-xs text-muted-foreground">Smart Trekking Companion</p>
             </div>
           </div>
           <div className="flex gap-4 mt-4">
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Route className="w-3.5 h-3.5" /> <span>3 plans</span>
+              <Map className="w-3.5 h-3.5" /> <span>{trekRoutes.length} routes</span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Heart className="w-3.5 h-3.5" /> <span>{wishlist.length} saved</span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Play className="w-3.5 h-3.5" /> <span>{reels.length} reels</span>
+              <Users className="w-3.5 h-3.5" /> <span>{assignedGuide ? "Guide ✓" : "No crew"}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Ticket className="w-3.5 h-3.5" /> <span>{bookedTickets.length} permits</span>
             </div>
           </div>
         </motion.header>
