@@ -4,7 +4,9 @@ import {
   Heart, CalendarDays, Hotel, Coffee, Package, Info, Play, Mountain,
   Route, Clock3, Users, ShieldAlert, BookmarkPlus, X, MessageCircle,
   Share2, MapPin, Star, BadgeCheck, Instagram, Youtube, ArrowLeft,
-  Send, Compass, ChevronRight, Plane, Bus, Car,
+  Send, Compass, ChevronRight, Plane, Bus, Car, Map, Phone, AlertTriangle,
+  Thermometer, CloudSnow, UserCheck, Ticket, LayoutDashboard, Shield,
+  Navigation, Eye, Footprints, HeartPulse, Radio, Tent, Award,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
