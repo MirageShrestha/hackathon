@@ -2,11 +2,9 @@ import React, { useMemo, useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart, CalendarDays, Hotel, Coffee, Package, Info, Play, Mountain,
-  Route, Clock3, Users, ShieldAlert, BookmarkPlus, X, MessageCircle,
-  Share2, MapPin, Star, BadgeCheck, Instagram, Youtube, ArrowLeft,
-  Send, Compass, ChevronRight, Plane, Bus, Car, Map, Phone, AlertTriangle,
-  Thermometer, CloudSnow, UserCheck, Ticket, LayoutDashboard, Shield,
-  Navigation, Eye, Footprints, HeartPulse, Radio, Tent, Award,
+  Route, Clock3, Users, ShieldAlert, BookmarkPlus, X, MapPin, Star,
+  BadgeCheck, ChevronRight, Car, Map, Ticket, LayoutDashboard, Shield,
+  Compass,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,218 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-/* ─── Data ─── */
-const reelGradients = [
-  "from-stone-800 via-amber-900 to-stone-900",
-  "from-slate-800 via-stone-700 to-slate-900",
-  "from-amber-800 via-stone-800 to-slate-900",
-];
-
-const reels = [
-  {
-    id: "r1", title: "Jeep Journey to Jomsom", subtitle: "Rough roads, mountain views",
-    place: "Jomsom", duration: "5 days", budget: "Rs 12,000–18,000", season: "Oct–Nov",
-    transport: "Bus + Shared Jeep", type: "Adventure", creator: "Mustang Motion",
-    handle: "@mustangmotion", description: "Budget-friendly Mustang road trip covering the best routes through Upper Mustang with local food stops and authentic tea houses.",
-    rating: 4.8, trips: 23, followers: "12.4K", bio: "Exploring Nepal's hidden trails since 2018. Budget travel expert & mountain storyteller.",
-    reviews: [
-      { user: "Aarav S.", text: "Great route suggestions! Followed this exact plan.", rating: 5 },
-      { user: "Priya M.", text: "Very helpful for first-time Mustang travelers.", rating: 4 },
-    ],
-    socials: { instagram: "@mustangmotion", youtube: "MustangMotion" },
-  },
-  {
-    id: "r2", title: "Muktinath Escape", subtitle: "Temple and scenic route",
-    place: "Muktinath", duration: "4 days", budget: "Rs 18,000–28,000", season: "Spring",
-    transport: "Tourist Bus + Jeep", type: "Spiritual", creator: "Sacred Steps",
-    handle: "@sacredsteps", description: "Comfortable family-style plan visiting the sacred Muktinath temple with stops at Kagbeni and local monasteries.",
-    rating: 4.9, trips: 45, followers: "28.1K", bio: "Spiritual travel guide. Connecting souls to sacred places across the Himalayas.",
-    reviews: [
-      { user: "Sita K.", text: "Beautiful spiritual journey. Highly recommend!", rating: 5 },
-      { user: "Rajan T.", text: "Perfect for families with elderly members.", rating: 5 },
-    ],
-    socials: { instagram: "@sacredsteps", youtube: "SacredStepsNepal" },
-  },
-  {
-    id: "r3", title: "Marpha Apple Trail", subtitle: "Cafes and village vibes",
-    place: "Marpha", duration: "5 days", budget: "Rs 15,000–24,000", season: "Sept–Nov",
-    transport: "Flight + Jeep", type: "Food & Culture", creator: "Apple Trail Nepal",
-    handle: "@appletrailnepal", description: "Scenic stays and food stops through Marpha village. Famous for apple brandy, pies, and the warmest hospitality in Mustang.",
-    rating: 4.7, trips: 31, followers: "8.9K", bio: "Foodie traveler documenting Nepal's best local cuisines & hidden cafe gems.",
-    reviews: [
-      { user: "Maya D.", text: "The apple pie recommendations were spot on!", rating: 5 },
-      { user: "Bikash R.", text: "Loved the cafe trail. A must for food lovers.", rating: 4 },
-    ],
-    socials: { instagram: "@appletrailnepal", youtube: "AppleTrailNepal" },
-  },
-];
-
-const hotels = [
-  { id: "h1", name: "Jomsom Eco Lodge", area: "Jomsom", price: "Rs 2,000/night", tag: "Budget" },
-  { id: "h2", name: "Marpha Apple Stay", area: "Marpha", price: "Rs 3,500/night", tag: "Scenic" },
-  { id: "h3", name: "Muktinath Family Inn", area: "Muktinath", price: "Rs 4,000/night", tag: "Family" },
-];
-
-const cafes = [
-  { id: "c1", name: "Apple Pie Corner", area: "Marpha", price: "Rs 300–700" },
-  { id: "c2", name: "Thakali Meal Stop", area: "Jomsom", price: "Rs 400–900" },
-  { id: "c3", name: "Temple Tea Point", area: "Muktinath", price: "Rs 150–350" },
-];
-
-const packs = [
-  { id: "p1", name: "Budget Mustang Escape", days: 5, price: "Rs 12,000–16,000", bestFor: "Students and friends" },
-  { id: "p2", name: "Balanced Mustang Route", days: 5, price: "Rs 18,000–25,000", bestFor: "Most travelers" },
-  { id: "p3", name: "Comfort Mustang Journey", days: 5, price: "Rs 35,000+", bestFor: "Families" },
-];
-
-const plans = [
-  {
-    id: "budget", title: "Budget Plan", badge: "Cheapest", budgetType: "low", days: 5,
-    group: ["solo", "friends"], mode: "cheapest", cost: "Rs 12,000–16,000",
-    transport: "Bus + Shared Jeep", stay: "Budget lodges", warning: "Long travel time.",
-    itinerary: [
-      { day: 1, title: "Kathmandu → Pokhara", details: "Bus and rest" },
-      { day: 2, title: "Pokhara → Jomsom", details: "Shared jeep" },
-      { day: 3, title: "Muktinath visit", details: "Temple and local meal" },
-      { day: 4, title: "Marpha exploration", details: "Cafe and village walk" },
-      { day: 5, title: "Return", details: "Jeep + bus" },
-    ],
-  },
-  {
-    id: "balanced", title: "Balanced Plan", badge: "Best Value", budgetType: "medium", days: 5,
-    group: ["solo", "friends", "family"], mode: "balanced", cost: "Rs 18,000–25,000",
-    transport: "Tourist Bus + Jeep", stay: "Mid-range hotels", warning: "Road and weather may affect timing.",
-    itinerary: [
-      { day: 1, title: "Kathmandu → Pokhara", details: "Tourist bus" },
-      { day: 2, title: "Pokhara → Jomsom", details: "Transfer and check-in" },
-      { day: 3, title: "Muktinath + Kagbeni", details: "Day visit" },
-      { day: 4, title: "Marpha cafe trail", details: "Apple products and coffee" },
-      { day: 5, title: "Return to Kathmandu", details: "Comfort route" },
-    ],
-  },
-  {
-    id: "comfort", title: "Comfort Plan", badge: "Fast & Easy", budgetType: "high", days: 5,
-    group: ["family", "friends"], mode: "fastest", cost: "Rs 35,000+",
-    transport: "Flight + Private Jeep", stay: "Comfort hotels", warning: "Flights may be delayed.",
-    itinerary: [
-      { day: 1, title: "Kathmandu → Pokhara", details: "Short flight" },
-      { day: 2, title: "Pokhara → Jomsom", details: "Flight and pickup" },
-      { day: 3, title: "Muktinath", details: "Private jeep visit" },
-      { day: 4, title: "Marpha leisure day", details: "Relaxed sightseeing" },
-      { day: 5, title: "Return", details: "Fast return" },
-    ],
-  },
-];
-
-const infoItems = [
-  { icon: Compass, text: "Autumn and spring are best for Mustang travel." },
-  { icon: Mountain, text: "Weather and road conditions can change quickly." },
-  { icon: ShieldAlert, text: "Carry warm layers, cash, power bank, and ID." },
-  { icon: Info, text: "This MVP compares bus, jeep, and flight templates." },
-];
-
-/* ─── Trek Routes Data ─── */
-const trekRoutes = [
-  {
-    id: "everest", name: "Everest Base Camp", region: "Solukhumbu", difficulty: "Hard",
-    duration: "14 days", maxAlt: "5,364m", bestSeason: "Mar–May, Sep–Nov",
-    weather: { temp: "-6°C to 10°C", condition: "Clear skies, cold nights" },
-    description: "The iconic trek to the foot of the world's highest peak through Sherpa villages and stunning Himalayan panorama.",
-    stops: [
-      { name: "Lukla", day: 1, alt: "2,860m", type: "Gateway", facilities: ["Airport", "Lodge", "Clinic"] },
-      { name: "Namche Bazaar", day: 3, alt: "3,440m", type: "Market Town", facilities: ["ATM", "Hospital", "Shops", "WiFi"] },
-      { name: "Tengboche", day: 5, alt: "3,860m", type: "Monastery", facilities: ["Lodge", "Bakery"] },
-      { name: "Dingboche", day: 7, alt: "4,410m", type: "Acclimatization", facilities: ["Lodge", "Clinic"] },
-      { name: "Gorak Shep", day: 10, alt: "5,164m", type: "Base Camp", facilities: ["Basic Lodge"] },
-      { name: "EBC", day: 11, alt: "5,364m", type: "Destination", facilities: ["None — day visit"] },
-    ],
-  },
-  {
-    id: "annapurna", name: "Annapurna Circuit", region: "Annapurna", difficulty: "Moderate",
-    duration: "12–16 days", maxAlt: "5,416m", bestSeason: "Oct–Nov, Mar–Apr",
-    weather: { temp: "-10°C to 20°C", condition: "Variable, possible snow at Thorong La" },
-    description: "A diverse circuit passing through rice paddies, deep gorges, arid plateaus, and over the Thorong La pass.",
-    stops: [
-      { name: "Besisahar", day: 1, alt: "760m", type: "Gateway", facilities: ["Bus Park", "Lodge", "Market"] },
-      { name: "Manang", day: 6, alt: "3,540m", type: "Acclimatization", facilities: ["Lodge", "Clinic", "Bakery"] },
-      { name: "Thorong La", day: 9, alt: "5,416m", type: "Pass", facilities: ["Tea house only"] },
-      { name: "Muktinath", day: 10, alt: "3,710m", type: "Temple", facilities: ["Lodge", "Temple", "Clinic"] },
-      { name: "Jomsom", day: 12, alt: "2,720m", type: "Town", facilities: ["Airport", "Hospital", "ATM"] },
-    ],
-  },
-  {
-    id: "langtang", name: "Langtang Valley", region: "Langtang", difficulty: "Moderate",
-    duration: "7–10 days", maxAlt: "3,870m", bestSeason: "Oct–Nov, Mar–May",
-    weather: { temp: "-5°C to 15°C", condition: "Generally clear, afternoon clouds" },
-    description: "A less crowded trek through beautiful valley with Tamang culture, cheese factories, and close mountain views.",
-    stops: [
-      { name: "Syabrubesi", day: 1, alt: "1,550m", type: "Gateway", facilities: ["Bus Park", "Lodge"] },
-      { name: "Lama Hotel", day: 2, alt: "2,380m", type: "Rest Stop", facilities: ["Lodge"] },
-      { name: "Langtang Village", day: 3, alt: "3,430m", type: "Village", facilities: ["Lodge", "Cheese Factory"] },
-      { name: "Kyanjin Gompa", day: 4, alt: "3,870m", type: "Monastery", facilities: ["Lodge", "Cheese Factory", "Clinic"] },
-    ],
-  },
-];
-
-/* ─── Safety & Emergency Data ─── */
-const emergencyContacts = [
-  { name: "Nepal Police", number: "100", icon: Shield, desc: "General emergency" },
-  { name: "Tourist Police", number: "1144", icon: UserCheck, desc: "Tourist-specific help" },
-  { name: "Helicopter Rescue", number: "+977-1-4261370", icon: Navigation, desc: "Air rescue services" },
-  { name: "CIWEC Clinic (KTM)", number: "+977-1-4424111", icon: HeartPulse, desc: "Traveler health clinic" },
-  { name: "Nepal Red Cross", number: "+977-1-4270650", icon: HeartPulse, desc: "Disaster & medical" },
-];
-
-const emergencyGuides = [
-  {
-    title: "Lost on the trail?", icon: Map, color: "text-blue-600 bg-blue-50",
-    steps: ["Stay calm and don't wander further.", "Retrace your steps to the last known point.", "Use landmarks — rivers flow downhill to villages.", "Blow a whistle 3 times (international distress).", "If you have signal, call your guide or 1144."],
-  },
-  {
-    title: "Altitude sickness?", icon: Thermometer, color: "text-red-600 bg-red-50",
-    steps: ["Stop ascending immediately.", "Headache + nausea = warning signs.", "Descend 300–500m if symptoms worsen.", "Take Diamox if available (consult doctor).", "Drink plenty of water. Avoid alcohol.", "Seek medical help at nearest clinic."],
-  },
-  {
-    title: "Bad weather / storm?", icon: CloudSnow, color: "text-purple-600 bg-purple-50",
-    steps: ["Seek shelter immediately — lodge or cave.", "Do NOT cross high passes in storms.", "Stay away from ridges, lone trees, metal objects.", "Keep warm layers and emergency food.", "Wait it out — weather changes fast in mountains."],
-  },
-  {
-    title: "Injury on the trail?", icon: HeartPulse, color: "text-orange-600 bg-orange-50",
-    steps: ["Apply basic first aid from your kit.", "Immobilize sprains with bandage/splint.", "For bleeding, apply pressure with clean cloth.", "Call for help — guide, nearby trekkers, or 1144.", "If unable to walk, stay put and signal for rescue."],
-  },
-];
-
-/* ─── Crew Data ─── */
-const guides = [
-  { id: "g1", name: "Pemba Sherpa", experience: "12 years", region: "Everest, Annapurna", languages: "Nepali, English, Hindi", rating: 4.9, treks: 340, badge: "Senior Guide", price: "Rs 3,000/day", phone: "+977-98XXXXXXXX" },
-  { id: "g2", name: "Lakpa Tamang", experience: "8 years", region: "Langtang, Manaslu", languages: "Nepali, English", rating: 4.7, treks: 180, badge: "Certified Guide", price: "Rs 2,500/day", phone: "+977-98XXXXXXXX" },
-  { id: "g3", name: "Dawa Dorje", experience: "15 years", region: "All major routes", languages: "Nepali, English, Japanese", rating: 5.0, treks: 500, badge: "Master Guide", price: "Rs 4,000/day", phone: "+977-98XXXXXXXX" },
-];
-
-const porters = [
-  { id: "pt1", name: "Mingma Rai", experience: "6 years", capacity: "25 kg", region: "Everest", rating: 4.8, price: "Rs 1,500/day", phone: "+977-98XXXXXXXX" },
-  { id: "pt2", name: "Nima Lama", experience: "4 years", capacity: "20 kg", region: "Annapurna", rating: 4.6, price: "Rs 1,200/day", phone: "+977-98XXXXXXXX" },
-  { id: "pt3", name: "Karma Bhote", experience: "10 years", capacity: "30 kg", region: "All routes", rating: 4.9, price: "Rs 1,800/day", phone: "+977-98XXXXXXXX" },
-];
-
-/* ─── Ticketing Data ─── */
-const tickets = [
-  { id: "t1", name: "TIMS Card", type: "Permit", price: "Rs 2,000", desc: "Trekkers' Information Management System — required for all treks", required: true },
-  { id: "t2", name: "Sagarmatha National Park", type: "Entry Permit", price: "Rs 3,000", desc: "Required for Everest region treks", required: true },
-  { id: "t3", name: "Annapurna Conservation Area", type: "Entry Permit", price: "Rs 3,000", desc: "Required for Annapurna region treks", required: true },
-  { id: "t4", name: "Langtang National Park", type: "Entry Permit", price: "Rs 3,000", desc: "Required for Langtang treks", required: true },
-  { id: "t5", name: "Upper Mustang Restricted Permit", type: "Special Permit", price: "USD 500 (10 days)", desc: "Restricted area permit for Upper Mustang", required: false },
-];
-
-const nearbyAttractions = [
-  { id: "a1", name: "Tengboche Monastery", area: "Everest", type: "Cultural", price: "Free" },
-  { id: "a2", name: "Ghorepani Poon Hill", area: "Annapurna", type: "Viewpoint", price: "Rs 100" },
-  { id: "a3", name: "Kyanjin Cheese Factory", area: "Langtang", type: "Cultural", price: "Free" },
-  { id: "a4", name: "Muktinath Temple", area: "Annapurna", type: "Spiritual", price: "Free" },
-  { id: "a5", name: "Kagbeni Old Town", area: "Mustang", type: "Heritage", price: "Free" },
-];
-
-type TabKey = "reels" | "wishlist" | "planner" | "itinerary" | "hotels" | "cafes" | "packages" | "info" | "profile" | "routes" | "safety" | "crew" | "tickets" | "dashboard";
+import type { TabKey, TrekRoute, Guide, Porter, WishlistItem, TrekPlan } from "@/components/trekking/types";
+import { reels, reelGradients, hotels, cafes, packs, plans, trekRoutes } from "@/components/trekking/data";
+import { ReelCard } from "@/components/trekking/ReelCard";
+import { ProfileSection } from "@/components/trekking/ProfileSection";
+import { RoutesSection } from "@/components/trekking/RoutesSection";
+import { SafetySection } from "@/components/trekking/SafetySection";
+import { CrewSection } from "@/components/trekking/CrewSection";
+import { TicketsSection } from "@/components/trekking/TicketsSection";
+import { DashboardSection } from "@/components/trekking/DashboardSection";
+import { SectionHeader } from "@/components/trekking/SectionHeader";
 
 const tabs: [TabKey, React.ElementType, string][] = [
   ["reels", Play, "Reels"],
@@ -243,132 +39,22 @@ const tabs: [TabKey, React.ElementType, string][] = [
   ["info", Info, "Info"],
 ];
 
-/* ─── Reel Card (TikTok Style) ─── */
-const ReelCard = ({
-  reel,
-  gradient,
-  isSaved,
-  onSave,
-  onPlan,
-  onProfile,
-  isActive,
-}: {
-  reel: typeof reels[0];
-  gradient: string;
-  isSaved: boolean;
-  onSave: () => void;
-  onPlan: () => void;
-  onProfile: () => void;
-  isActive: boolean;
-}) => (
-  <motion.div
-    className={`relative flex-shrink-0 w-full h-[520px] rounded-3xl overflow-hidden bg-gradient-to-br ${gradient} cursor-pointer`}
-    initial={{ opacity: 0, scale: 0.96 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.4 }}
-  >
-    {/* Background pattern */}
-    <div className="absolute inset-0 opacity-10">
-      <div className="absolute top-12 right-8">
-        <Mountain className="w-32 h-32 text-white/20" />
-      </div>
-      <div className="absolute bottom-32 left-6">
-        <Mountain className="w-20 h-20 text-white/15 rotate-12" />
-      </div>
-    </div>
-
-    {/* Top overlay — "For You" + Search hint */}
-    <div className="absolute top-0 left-0 right-0 p-5 z-10">
-      <div className="flex items-center justify-between">
-        <span className="text-white/70 text-xs font-medium tracking-wider uppercase">For You</span>
-        <Badge className="bg-white/15 text-white border-0 backdrop-blur-md text-[10px] px-2.5 py-0.5">
-          {reel.type}
-        </Badge>
-      </div>
-    </div>
-
-    {/* Side action bar */}
-    <div className="absolute right-4 bottom-36 z-10 flex flex-col items-center gap-5">
-      <button onClick={onSave} className="flex flex-col items-center gap-1 group">
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all ${isSaved ? "bg-red-500/90" : "bg-white/15 group-hover:bg-white/25"}`}>
-          <Heart className={`w-5 h-5 ${isSaved ? "text-white fill-white" : "text-white"}`} />
-        </div>
-        <span className="text-white/70 text-[10px]">{isSaved ? "Saved" : "Save"}</span>
-      </button>
-      <button className="flex flex-col items-center gap-1 group">
-        <div className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center group-hover:bg-white/25 transition-all">
-          <MessageCircle className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-white/70 text-[10px]">Chat</span>
-      </button>
-      <button className="flex flex-col items-center gap-1 group">
-        <div className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center group-hover:bg-white/25 transition-all">
-          <Share2 className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-white/70 text-[10px]">Share</span>
-      </button>
-      <button onClick={onPlan} className="flex flex-col items-center gap-1 group">
-        <div className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center group-hover:bg-white/25 transition-all">
-          <Route className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-white/70 text-[10px]">Plan</span>
-      </button>
-    </div>
-
-    {/* Bottom content overlay */}
-    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-5 pt-20">
-      {/* Creator info */}
-      <button onClick={onProfile} className="flex items-center gap-3 mb-3 group">
-        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 group-hover:border-white/70 transition-all">
-          <span className="text-white font-bold text-sm">{reel.creator[0]}</span>
-        </div>
-        <div className="text-left">
-          <div className="flex items-center gap-1.5">
-            <span className="text-white font-semibold text-sm">{reel.creator}</span>
-            <BadgeCheck className="w-3.5 h-3.5 text-blue-400" />
-          </div>
-          <span className="text-white/60 text-xs">{reel.handle}</span>
-        </div>
-      </button>
-
-      {/* Title */}
-      <h3 className="text-white font-bold text-lg leading-tight mb-1">{reel.title}</h3>
-      <p className="text-white/70 text-sm mb-3">{reel.subtitle}</p>
-
-      {/* Tags */}
-      <div className="flex flex-wrap gap-1.5">
-        <Badge className="bg-white/15 text-white border-0 backdrop-blur-md text-[10px] px-2 py-0.5 gap-1">
-          <MapPin className="w-3 h-3" /> {reel.place}
-        </Badge>
-        <Badge className="bg-white/15 text-white border-0 backdrop-blur-md text-[10px] px-2 py-0.5 gap-1">
-          <Clock3 className="w-3 h-3" /> {reel.duration}
-        </Badge>
-        <Badge className="bg-white/15 text-white border-0 backdrop-blur-md text-[10px] px-2 py-0.5 gap-1">
-          <Car className="w-3 h-3" /> {reel.transport}
-        </Badge>
-      </div>
-    </div>
-  </motion.div>
-);
-
-/* ─── Main Component ─── */
 export default function TrueNepalMustangMVP() {
   const [page, setPage] = useState<TabKey>("reels");
-  const [wishlist, setWishlist] = useState<any[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<typeof plans[0] | null>(null);
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<TrekPlan | null>(null);
   const [search, setSearch] = useState("");
   const [form, setForm] = useState({ budget: "medium", days: "5", group: "friends", mode: "balanced" });
   const [activeReel, setActiveReel] = useState(reels[0].id);
   const [profileReel, setProfileReel] = useState<typeof reels[0] | null>(null);
-  const [selectedRoute, setSelectedRoute] = useState<typeof trekRoutes[0] | null>(null);
-  const [assignedGuide, setAssignedGuide] = useState<typeof guides[0] | null>(null);
-  const [assignedPorter, setAssignedPorter] = useState<typeof porters[0] | null>(null);
+  const [selectedRoute, setSelectedRoute] = useState<TrekRoute | null>(null);
+  const [assignedGuide, setAssignedGuide] = useState<Guide | null>(null);
+  const [assignedPorter, setAssignedPorter] = useState<Porter | null>(null);
   const [bookedTickets, setBookedTickets] = useState<string[]>([]);
   const reelContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleTicket = (id: string) => setBookedTickets(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
-
-  const toggleWishlist = (item: any) =>
+  const toggleWishlist = (item: WishlistItem) =>
     setWishlist((p) => p.some((x) => x.id === item.id) ? p.filter((x) => x.id !== item.id) : [...p, item]);
   const isSaved = (id: string) => wishlist.some((x) => x.id === id);
 
@@ -380,18 +66,16 @@ export default function TrueNepalMustangMVP() {
   const selectedReel = reels.find((r) => r.id === activeReel) || reels[0];
 
   const generatedPlans = useMemo(
-    () =>
-      plans.filter((p) => {
-        const budgetOk = form.budget === "medium" || p.budgetType === form.budget;
-        const daysOk = Number(form.days) >= p.days;
-        const groupOk = p.group.includes(form.group);
-        const modeOk = form.mode === "balanced" || p.mode === form.mode;
-        return budgetOk && daysOk && groupOk && modeOk;
-      }),
+    () => plans.filter((p) => {
+      const budgetOk = form.budget === "medium" || p.budgetType === form.budget;
+      const daysOk = Number(form.days) >= p.days;
+      const groupOk = p.group.includes(form.group);
+      const modeOk = form.mode === "balanced" || p.mode === form.mode;
+      return budgetOk && daysOk && groupOk && modeOk;
+    }),
     [form]
   );
 
-  // Scroll-snap reel tracking
   useEffect(() => {
     const container = reelContainerRef.current;
     if (!container) return;
@@ -402,10 +86,7 @@ export default function TrueNepalMustangMVP() {
       let minDist = Infinity;
       children.forEach((child) => {
         const dist = Math.abs(child.getBoundingClientRect().top - containerRect.top);
-        if (dist < minDist) {
-          minDist = dist;
-          closest = child;
-        }
+        if (dist < minDist) { minDist = dist; closest = child; }
       });
       const idx = children.indexOf(closest);
       if (filteredReels[idx]) setActiveReel(filteredReels[idx].id);
@@ -422,41 +103,41 @@ export default function TrueNepalMustangMVP() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 lg:pb-6">
         {/* Header */}
         <motion.header
-          className="mb-8"
+          className="mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <Mountain className="w-5 h-5 text-primary-foreground" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
+                <Mountain className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-foreground tracking-tight">TrueNepal</h1>
+                <p className="text-[11px] text-muted-foreground">Smart Trekking Companion</p>
+              </div>
             </div>
-            <div>
-            <h1 className="text-xl font-bold text-foreground tracking-tight">TrueNepal</h1>
-              <p className="text-xs text-muted-foreground">Smart Trekking Companion</p>
-            </div>
-          </div>
-          <div className="flex gap-4 mt-4">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Map className="w-3.5 h-3.5" /> <span>{trekRoutes.length} routes</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Heart className="w-3.5 h-3.5" /> <span>{wishlist.length} saved</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Users className="w-3.5 h-3.5" /> <span>{assignedGuide ? "Guide ✓" : "No crew"}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Ticket className="w-3.5 h-3.5" /> <span>{bookedTickets.length} permits</span>
+            <div className="hidden sm:flex gap-4">
+              {[
+                { icon: Map, text: `${trekRoutes.length} routes` },
+                { icon: Heart, text: `${wishlist.length} saved` },
+                { icon: Users, text: assignedGuide ? "Guide ✓" : "No crew" },
+                { icon: Ticket, text: `${bookedTickets.length} permits` },
+              ].map(({ icon: Icon, text }) => (
+                <div key={text} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Icon className="w-3.5 h-3.5" /> <span>{text}</span>
+                </div>
+              ))}
             </div>
           </div>
         </motion.header>
 
-        {/* Tab Navigation */}
-        <div className="mb-6 overflow-x-auto scrollbar-hide -mx-4 px-4">
+        {/* Desktop Tab Navigation */}
+        <div className="mb-6 overflow-x-auto scrollbar-hide -mx-4 px-4 hidden lg:block">
           <div className="flex gap-1 min-w-max">
             {tabs.map(([key, Icon, label]) => (
               <button
@@ -475,14 +156,32 @@ export default function TrueNepalMustangMVP() {
           </div>
         </div>
 
+        {/* Mobile scrollable tabs */}
+        <div className="mb-6 overflow-x-auto scrollbar-hide -mx-4 px-4 lg:hidden">
+          <div className="flex gap-1 min-w-max">
+            {tabs.map(([key, Icon, label]) => (
+              <button
+                key={key}
+                onClick={() => setPage(key)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                  page === key
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Page Content */}
         <AnimatePresence mode="wait">
-          {/* ═══ REELS ═══ */}
+          {/* REELS */}
           {page === "reels" && (
             <motion.div key="reels" {...pageVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Reel feed (TikTok style) */}
               <div className="lg:col-span-5 xl:col-span-4">
-                {/* Search */}
                 <div className="mb-4">
                   <Input
                     value={search}
@@ -491,7 +190,6 @@ export default function TrueNepalMustangMVP() {
                     className="h-11 rounded-xl bg-card border-border"
                   />
                 </div>
-                {/* Vertical scroll reel container */}
                 <div
                   ref={reelContainerRef}
                   className="h-[540px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
@@ -513,28 +211,32 @@ export default function TrueNepalMustangMVP() {
                 </div>
               </div>
 
-              {/* Reel detail panel */}
+              {/* Detail panel */}
               <div className="lg:col-span-7 xl:col-span-8 space-y-4">
                 <Card className="border-border shadow-none">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">Reel Details</CardTitle>
-                      <Badge variant="secondary" className="text-xs">{selectedReel.type}</Badge>
+                      <Badge variant="secondary" className="text-xs rounded-full">{selectedReel.type}</Badge>
                     </div>
                     <CardDescription>Travel context & creator info</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-5">
-                    {/* Location & stats */}
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="gap-1 text-xs"><MapPin className="w-3 h-3" />{selectedReel.place}</Badge>
-                      <Badge variant="outline" className="gap-1 text-xs"><Clock3 className="w-3 h-3" />{selectedReel.duration}</Badge>
-                      <Badge variant="outline" className="gap-1 text-xs"><Car className="w-3 h-3" />{selectedReel.transport}</Badge>
-                      <Badge variant="outline" className="gap-1 text-xs"><Star className="w-3 h-3 text-amber-500" />{selectedReel.rating}</Badge>
+                      {[
+                        { icon: MapPin, text: selectedReel.place },
+                        { icon: Clock3, text: selectedReel.duration },
+                        { icon: Car, text: selectedReel.transport },
+                        { icon: Star, text: String(selectedReel.rating), color: "text-amber-500" },
+                      ].map(({ icon: Icon, text, color }) => (
+                        <Badge key={text} variant="outline" className="gap-1 text-xs">
+                          <Icon className={`w-3 h-3 ${color || ""}`} />{text}
+                        </Badge>
+                      ))}
                     </div>
 
-                    {/* Creator */}
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                      <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
                         <span className="font-bold text-primary">{selectedReel.creator[0]}</span>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -544,192 +246,92 @@ export default function TrueNepalMustangMVP() {
                         </div>
                         <span className="text-xs text-muted-foreground">{selectedReel.handle}</span>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-xs"
-                        onClick={() => { setProfileReel(selectedReel); setPage("profile"); }}
-                      >
-                        View Profile <ChevronRight className="w-3 h-3 ml-1" />
+                      <Button variant="ghost" size="sm" className="text-xs" onClick={() => { setProfileReel(selectedReel); setPage("profile"); }}>
+                        View <ChevronRight className="w-3 h-3 ml-1" />
                       </Button>
                     </div>
 
-                    {/* Description */}
                     <p className="text-sm text-muted-foreground leading-relaxed">{selectedReel.description}</p>
 
-                    {/* Budget & Season */}
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 rounded-xl bg-secondary/50">
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Budget</p>
-                        <p className="text-sm font-semibold text-foreground">{selectedReel.budget}</p>
-                      </div>
-                      <div className="p-3 rounded-xl bg-secondary/50">
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Best Season</p>
-                        <p className="text-sm font-semibold text-foreground">{selectedReel.season}</p>
-                      </div>
+                      {[
+                        { label: "Budget", value: selectedReel.budget },
+                        { label: "Best Season", value: selectedReel.season },
+                      ].map(({ label, value }) => (
+                        <div key={label} className="p-3 rounded-xl bg-secondary/50">
+                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</p>
+                          <p className="text-sm font-semibold text-foreground">{value}</p>
+                        </div>
+                      ))}
                     </div>
 
-                    {/* Actions */}
                     <div className="flex gap-2">
-                      <Button className="flex-1 rounded-xl" onClick={() => setPage("planner")}>
+                      <Button className="flex-1 rounded-xl h-11" onClick={() => setPage("planner")}>
                         <Route className="w-4 h-4 mr-2" /> Plan This Trip
                       </Button>
-                      <Button
-                        variant="outline"
-                        className="rounded-xl"
-                        onClick={() => toggleWishlist({ ...selectedReel, category: "Reel" })}
-                      >
+                      <Button variant="outline" className="rounded-xl h-11" onClick={() => toggleWishlist({ ...selectedReel, category: "Reel" })}>
                         <Heart className={`w-4 h-4 ${isSaved(selectedReel.id) ? "fill-red-500 text-red-500" : ""}`} />
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Quick facts */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {[
-                    { label: "Budget ranges attached to inspiration", icon: "💰" },
-                    { label: "Planner gives multiple route options", icon: "🗺️" },
-                    { label: "Selected plan auto-builds itinerary", icon: "📋" },
-                  ].map((fact, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-card border border-border text-center">
-                      <span className="text-lg mb-1 block">{fact.icon}</span>
-                      <p className="text-xs text-muted-foreground leading-snug">{fact.label}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
             </motion.div>
           )}
 
-          {/* ═══ PROFILE ═══ */}
+          {/* PROFILE */}
           {page === "profile" && profileReel && (
-            <motion.div key="profile" {...pageVariants} className="max-w-2xl mx-auto space-y-6">
-              {/* Banner */}
-              <div className="relative h-40 rounded-3xl bg-gradient-to-br from-stone-700 via-amber-800 to-stone-900 overflow-hidden">
-                <Mountain className="absolute right-6 bottom-4 w-24 h-24 text-white/10" />
-                <button
-                  onClick={() => setPage("reels")}
-                  className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/25 transition-all"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Avatar & Info */}
-              <div className="px-4 -mt-12 relative z-10">
-                <div className="w-20 h-20 rounded-2xl bg-card border-4 border-background flex items-center justify-center shadow-lg">
-                  <span className="text-2xl font-bold text-primary">{profileReel.creator[0]}</span>
-                </div>
-                <div className="mt-3">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-foreground">{profileReel.creator}</h2>
-                    <BadgeCheck className="w-5 h-5 text-blue-500" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">{profileReel.handle}</p>
-                  <p className="text-sm text-foreground/80 mt-2 leading-relaxed">{profileReel.bio}</p>
-                </div>
-
-                {/* Stats */}
-                <div className="flex gap-6 mt-4">
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-foreground">{profileReel.followers}</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Followers</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-foreground">{profileReel.trips}</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Trips</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-foreground flex items-center gap-1">
-                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />{profileReel.rating}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Rating</p>
-                  </div>
-                </div>
-
-                {/* Trust badges */}
-                <div className="flex flex-wrap gap-2 mt-4">
-                  <Badge variant="secondary" className="gap-1.5 text-xs rounded-lg px-3 py-1">
-                    <BadgeCheck className="w-3.5 h-3.5 text-blue-500" /> Verified Traveler
-                  </Badge>
-                  <Badge variant="secondary" className="gap-1.5 text-xs rounded-lg px-3 py-1">
-                    <Mountain className="w-3.5 h-3.5" /> Mustang Expert
-                  </Badge>
-                  <Badge variant="secondary" className="gap-1.5 text-xs rounded-lg px-3 py-1">
-                    <Star className="w-3.5 h-3.5 text-amber-500" /> Top Creator
-                  </Badge>
-                </div>
-
-                {/* Social links & actions */}
-                <div className="flex gap-2 mt-5">
-                  <Button variant="outline" size="sm" className="rounded-xl gap-2 flex-1">
-                    <Instagram className="w-4 h-4" /> Instagram
-                  </Button>
-                  <Button variant="outline" size="sm" className="rounded-xl gap-2 flex-1">
-                    <Youtube className="w-4 h-4" /> YouTube
-                  </Button>
-                  <Button variant="outline" size="sm" className="rounded-xl gap-2">
-                    <Send className="w-4 h-4" /> Message
-                  </Button>
-                </div>
-                <Button className="w-full mt-3 rounded-xl">Follow</Button>
-              </div>
-
-              {/* Reviews */}
-              <div className="px-4 space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Reviews</h3>
-                {profileReel.reviews.map((review, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-card border border-border">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-foreground">{review.user}</span>
-                      <div className="flex gap-0.5">
-                        {Array.from({ length: review.rating }).map((_, j) => (
-                          <Star key={j} className="w-3 h-3 text-amber-500 fill-amber-500" />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{review.text}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Creator's reels */}
-              <div className="px-4 space-y-3 pb-8">
-                <h3 className="text-sm font-semibold text-foreground">Reels by {profileReel.creator}</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {reels
-                    .filter((r) => r.handle === profileReel.handle)
-                    .map((r, i) => (
-                      <button
-                        key={r.id}
-                        onClick={() => { setActiveReel(r.id); setPage("reels"); }}
-                        className={`relative h-44 rounded-2xl bg-gradient-to-br ${reelGradients[i % reelGradients.length]} overflow-hidden group`}
-                      >
-                        <Mountain className="absolute right-3 bottom-3 w-12 h-12 text-white/10" />
-                        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent">
-                          <p className="text-white font-medium text-xs text-left">{r.title}</p>
-                          <p className="text-white/60 text-[10px] text-left">{r.place} · {r.type}</p>
-                        </div>
-                      </button>
-                    ))}
-                </div>
-              </div>
-            </motion.div>
+            <ProfileSection profileReel={profileReel} setPage={setPage} setActiveReel={setActiveReel} pageVariants={pageVariants} />
           )}
 
-          {/* ═══ WISHLIST ═══ */}
+          {/* ROUTES */}
+          {page === "routes" && (
+            <RoutesSection selectedRoute={selectedRoute} setSelectedRoute={setSelectedRoute} pageVariants={pageVariants} />
+          )}
+
+          {/* SAFETY */}
+          {page === "safety" && <SafetySection pageVariants={pageVariants} />}
+
+          {/* CREW */}
+          {page === "crew" && (
+            <CrewSection
+              assignedGuide={assignedGuide}
+              assignedPorter={assignedPorter}
+              setAssignedGuide={setAssignedGuide}
+              setAssignedPorter={setAssignedPorter}
+              pageVariants={pageVariants}
+            />
+          )}
+
+          {/* TICKETS */}
+          {page === "tickets" && (
+            <TicketsSection bookedTickets={bookedTickets} toggleTicket={toggleTicket} pageVariants={pageVariants} />
+          )}
+
+          {/* DASHBOARD */}
+          {page === "dashboard" && (
+            <DashboardSection
+              selectedPlan={selectedPlan}
+              assignedGuide={assignedGuide}
+              assignedPorter={assignedPorter}
+              bookedTickets={bookedTickets}
+              wishlist={wishlist}
+              setPage={setPage}
+              pageVariants={pageVariants}
+            />
+          )}
+
+          {/* WISHLIST */}
           {page === "wishlist" && (
             <motion.div key="wishlist" {...pageVariants}>
+              <SectionHeader icon={Heart} title="Saved Items" subtitle="Your saved reels, stays, cafes, and packages" />
               <Card className="border-border shadow-none">
-                <CardHeader>
-                  <CardTitle className="text-lg">Saved Items</CardTitle>
-                  <CardDescription>Your saved reels, stays, cafes, and packages</CardDescription>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   {wishlist.length === 0 ? (
                     <div className="text-center py-16">
-                      <Heart className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+                      <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4">
+                        <Heart className="w-8 h-8 text-muted-foreground/40" />
+                      </div>
                       <p className="text-muted-foreground text-sm">No saved items yet</p>
                       <p className="text-muted-foreground/60 text-xs mt-1">Save reels, hotels, or cafes to see them here</p>
                     </div>
@@ -742,7 +344,7 @@ export default function TrueNepalMustangMVP() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground truncate">{item.title || item.name}</p>
-                            <p className="text-xs text-muted-foreground">{item.category} {item.place && `· ${item.place}`}</p>
+                            <p className="text-xs text-muted-foreground">{item.category}{item.place && ` · ${item.place}`}</p>
                           </div>
                           <button onClick={() => toggleWishlist(item)} className="text-muted-foreground hover:text-destructive transition-colors">
                             <X className="w-4 h-4" />
@@ -756,700 +358,268 @@ export default function TrueNepalMustangMVP() {
             </motion.div>
           )}
 
-          {/* ═══ PLANNER ═══ */}
+          {/* PLANNER */}
           {page === "planner" && (
-            <motion.div key="planner" {...pageVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-4">
-                <Card className="border-border shadow-none">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Trip Planner</CardTitle>
-                    <CardDescription>Auto-generates Mustang plans for you</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Budget</label>
-                      <Select value={form.budget} onValueChange={(v) => setForm({ ...form, budget: v })}>
-                        <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Days</label>
-                      <Select value={form.days} onValueChange={(v) => setForm({ ...form, days: v })}>
-                        <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="3">3 days</SelectItem>
-                          <SelectItem value="5">5 days</SelectItem>
-                          <SelectItem value="7">7 days</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Group</label>
-                      <Select value={form.group} onValueChange={(v) => setForm({ ...form, group: v })}>
-                        <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="solo">Solo</SelectItem>
-                          <SelectItem value="friends">Friends</SelectItem>
-                          <SelectItem value="family">Family</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Priority</label>
-                      <Select value={form.mode} onValueChange={(v) => setForm({ ...form, mode: v })}>
-                        <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cheapest">Cheapest</SelectItem>
-                          <SelectItem value="balanced">Balanced</SelectItem>
-                          <SelectItem value="fastest">Fastest</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              <div className="lg:col-span-8 space-y-4">
-                {generatedPlans.length === 0 ? (
-                  <div className="text-center py-16">
-                    <Route className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                    <p className="text-muted-foreground text-sm">No matching plans found</p>
-                  </div>
-                ) : (
-                  generatedPlans.map((plan) => (
-                    <Card key={plan.id} className="border-border shadow-none hover:border-primary/20 transition-colors">
-                      <CardContent className="p-5">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-semibold text-foreground">{plan.title}</h3>
-                              <Badge variant="secondary" className="text-[10px]">{plan.badge}</Badge>
-                            </div>
-                            <p className="text-xs text-muted-foreground">{plan.transport} · {plan.stay}</p>
-                          </div>
-                          <p className="text-sm font-bold text-foreground">{plan.cost}</p>
-                        </div>
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          <Badge variant="outline" className="text-[10px] gap-1"><Clock3 className="w-3 h-3" />{plan.days} days</Badge>
-                          <Badge variant="outline" className="text-[10px] gap-1"><Users className="w-3 h-3" />{plan.group.join(", ")}</Badge>
-                          <Badge variant="outline" className="text-[10px] gap-1 text-amber-600 border-amber-200 bg-amber-50"><ShieldAlert className="w-3 h-3" />{plan.warning}</Badge>
-                        </div>
-                        {/* Mini itinerary */}
-                        <div className="space-y-2 mb-4">
-                          {plan.itinerary.slice(0, 3).map((day) => (
-                            <div key={day.day} className="flex items-center gap-3 text-xs">
-                              <span className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{day.day}</span>
-                              <span className="font-medium text-foreground">{day.title}</span>
-                              <span className="text-muted-foreground">— {day.details}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            className="flex-1 rounded-xl"
-                            onClick={() => { setSelectedPlan(plan); setPage("itinerary"); }}
-                          >
-                            Use This Plan
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="rounded-xl"
-                            onClick={() => toggleWishlist({ id: `wish-${plan.id}`, title: plan.title, category: "Trip Plan", budget: plan.cost })}
-                          >
-                            <BookmarkPlus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══ ITINERARY ═══ */}
-          {page === "itinerary" && (
-            <motion.div key="itinerary" {...pageVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-8">
-                <Card className="border-border shadow-none">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{selectedPlan?.title || "No plan selected"}</CardTitle>
-                    <CardDescription>
-                      {selectedPlan ? `${selectedPlan.transport} · ${selectedPlan.cost} · ${selectedPlan.stay}` : "Choose a plan from Trip Planner."}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {selectedPlan ? (
-                      <div className="space-y-4">
-                        {selectedPlan.itinerary.map((day) => (
-                          <div key={day.day} className="flex gap-4">
-                            <div className="flex flex-col items-center">
-                              <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">{day.day}</div>
-                              {day.day < selectedPlan.itinerary.length && <div className="w-px flex-1 bg-border mt-2" />}
-                            </div>
-                            <div className="flex-1 pb-6">
-                              <h4 className="font-semibold text-sm text-foreground">{day.title}</h4>
-                              <p className="text-xs text-muted-foreground mt-0.5">{day.details}</p>
-                              <div className="flex gap-2 mt-2">
-                                <Button variant="outline" size="sm" className="text-[10px] h-7 rounded-lg px-2" onClick={() => setPage("hotels")}>+ Hotel</Button>
-                                <Button variant="outline" size="sm" className="text-[10px] h-7 rounded-lg px-2" onClick={() => setPage("cafes")}>+ Cafe</Button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-12">
-                        <CalendarDays className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                        <p className="text-sm text-muted-foreground">Open Trip Planner and click "Use this plan"</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-              <div className="lg:col-span-4">
-                <Card className="border-border shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm">Budget Summary</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {[
-                      ["Transport", selectedPlan?.transport],
-                      ["Stay", selectedPlan?.stay],
-                      ["Total", selectedPlan?.cost],
-                    ].map(([label, val]) => (
-                      <div key={label as string} className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">{label}</span>
-                        <span className="font-medium text-foreground">{val || "—"}</span>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══ HOTELS ═══ */}
-          {page === "hotels" && (
-            <motion.div key="hotels" {...pageVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {hotels.map((hotel) => (
-                <Card key={hotel.id} className="border-border shadow-none hover:border-primary/20 transition-colors">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-semibold text-sm text-foreground">{hotel.name}</h3>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" />{hotel.area}</p>
-                      </div>
-                      <Badge variant="secondary" className="text-[10px]">{hotel.tag}</Badge>
-                    </div>
-                    <p className="text-sm font-bold text-foreground mb-3">{hotel.price}</p>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...hotel, category: "Hotel" })}>
-                        <Heart className={`w-3 h-3 mr-1 ${isSaved(hotel.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
-                      </Button>
-                      <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>Add</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </motion.div>
-          )}
-
-          {/* ═══ CAFES ═══ */}
-          {page === "cafes" && (
-            <motion.div key="cafes" {...pageVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {cafes.map((cafe) => (
-                <Card key={cafe.id} className="border-border shadow-none hover:border-primary/20 transition-colors">
-                  <CardContent className="p-5">
-                    <h3 className="font-semibold text-sm text-foreground">{cafe.name}</h3>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="w-3 h-3" />{cafe.area}</p>
-                    <p className="text-sm font-bold text-foreground mt-2 mb-3">{cafe.price}</p>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...cafe, category: "Cafe" })}>
-                        <Heart className={`w-3 h-3 mr-1 ${isSaved(cafe.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
-                      </Button>
-                      <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>Add</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </motion.div>
-          )}
-
-          {/* ═══ PACKAGES ═══ */}
-          {page === "packages" && (
-            <motion.div key="packages" {...pageVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {packs.map((pkg) => (
-                <Card key={pkg.id} className="border-border shadow-none hover:border-primary/20 transition-colors">
-                  <CardContent className="p-5">
-                    <h3 className="font-semibold text-foreground">{pkg.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{pkg.days} days · {pkg.price}</p>
-                    <p className="text-xs text-muted-foreground mt-2">Best for: <span className="text-foreground">{pkg.bestFor}</span></p>
-                    <div className="flex gap-2 mt-4">
-                      <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => { setSelectedPlan(plans[1]); setPage("itinerary"); }}>Use</Button>
-                      <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...pkg, category: "Package" })}>
-                        <Heart className={`w-3 h-3 mr-1 ${isSaved(pkg.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </motion.div>
-          )}
-
-          {/* ═══ TREK ROUTES ═══ */}
-          {page === "routes" && (
-            <motion.div key="routes" {...pageVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-4 space-y-3">
-                <h2 className="text-lg font-bold text-foreground mb-1">Trek Routes</h2>
-                <p className="text-xs text-muted-foreground mb-4">Explore popular trekking routes with detailed stop info</p>
-                {trekRoutes.map((route) => (
-                  <button
-                    key={route.id}
-                    onClick={() => setSelectedRoute(route)}
-                    className={`w-full text-left p-4 rounded-2xl border transition-all ${selectedRoute?.id === route.id ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/20"}`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold text-sm text-foreground">{route.name}</h3>
-                      <Badge variant={route.difficulty === "Hard" ? "destructive" : "secondary"} className="text-[10px]">{route.difficulty}</Badge>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      <Badge variant="outline" className="text-[10px] gap-1"><Clock3 className="w-3 h-3" />{route.duration}</Badge>
-                      <Badge variant="outline" className="text-[10px] gap-1"><Mountain className="w-3 h-3" />{route.maxAlt}</Badge>
-                    </div>
-                  </button>
-                ))}
-              </div>
-              <div className="lg:col-span-8">
-                {selectedRoute ? (
+            <motion.div key="planner" {...pageVariants}>
+              <SectionHeader icon={Route} title="Trip Planner" subtitle="Auto-generates Mustang plans for you" />
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-4">
                   <Card className="border-border shadow-none">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{selectedRoute.name}</CardTitle>
-                        <Badge variant="outline" className="gap-1 text-xs"><MapPin className="w-3 h-3" />{selectedRoute.region}</Badge>
-                      </div>
-                      <CardDescription>{selectedRoute.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-5">
-                      {/* Route stats */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {[
-                          { label: "Duration", value: selectedRoute.duration, icon: Clock3 },
-                          { label: "Max Altitude", value: selectedRoute.maxAlt, icon: Mountain },
-                          { label: "Best Season", value: selectedRoute.bestSeason, icon: Compass },
-                          { label: "Difficulty", value: selectedRoute.difficulty, icon: Footprints },
-                        ].map((stat) => (
-                          <div key={stat.label} className="p-3 rounded-xl bg-secondary/50 text-center">
-                            <stat.icon className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
-                            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{stat.label}</p>
-                            <p className="text-xs font-semibold text-foreground mt-0.5">{stat.value}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Weather */}
-                      <div className="p-3 rounded-xl bg-secondary/50 flex items-center gap-3">
-                        <CloudSnow className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                        <div>
-                          <p className="text-xs font-medium text-foreground">Weather: {selectedRoute.weather.temp}</p>
-                          <p className="text-[10px] text-muted-foreground">{selectedRoute.weather.condition}</p>
+                    <CardContent className="p-5 space-y-4">
+                      {[
+                        { label: "Budget", value: form.budget, key: "budget", options: [["low", "Low"], ["medium", "Medium"], ["high", "High"]] },
+                        { label: "Days", value: form.days, key: "days", options: [["3", "3 days"], ["5", "5 days"], ["7", "7 days"]] },
+                        { label: "Group", value: form.group, key: "group", options: [["solo", "Solo"], ["friends", "Friends"], ["family", "Family"]] },
+                        { label: "Priority", value: form.mode, key: "mode", options: [["cheapest", "Cheapest"], ["balanced", "Balanced"], ["fastest", "Fastest"]] },
+                      ].map(({ label, value, key, options }) => (
+                        <div key={key}>
+                          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{label}</label>
+                          <Select value={value} onValueChange={(v) => setForm({ ...form, [key]: v })}>
+                            <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              {options.map(([val, text]) => (
+                                <SelectItem key={val} value={val}>{text}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="lg:col-span-8 space-y-4">
+                  {generatedPlans.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4">
+                        <Route className="w-8 h-8 text-muted-foreground/40" />
                       </div>
-
-                      {/* Stops timeline */}
-                      <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-3">Route Stops</h4>
-                        <div className="space-y-3">
-                          {selectedRoute.stops.map((stop, i) => (
-                            <div key={i} className="flex gap-3">
-                              <div className="flex flex-col items-center">
-                                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">D{stop.day}</div>
-                                {i < selectedRoute.stops.length - 1 && <div className="w-px flex-1 bg-border mt-1" />}
+                      <p className="text-muted-foreground text-sm">No matching plans found</p>
+                    </div>
+                  ) : (
+                    generatedPlans.map((plan) => (
+                      <Card key={plan.id} className="border-border shadow-none hover:border-primary/20 hover:shadow-sm transition-all">
+                        <CardContent className="p-5">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="font-semibold text-foreground">{plan.title}</h3>
+                                <Badge variant="secondary" className="text-[10px] rounded-full">{plan.badge}</Badge>
                               </div>
-                              <div className="flex-1 pb-3">
-                                <div className="flex items-center justify-between">
-                                  <h5 className="text-sm font-semibold text-foreground">{stop.name}</h5>
-                                  <span className="text-[10px] text-muted-foreground">{stop.alt}</span>
-                                </div>
-                                <Badge variant="secondary" className="text-[10px] mt-1">{stop.type}</Badge>
-                                <div className="flex flex-wrap gap-1 mt-1.5">
-                                  {stop.facilities.map((f) => (
-                                    <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">{f}</span>
-                                  ))}
+                              <p className="text-xs text-muted-foreground">{plan.transport} · {plan.stay}</p>
+                            </div>
+                            <p className="text-sm font-bold text-foreground">{plan.cost}</p>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            <Badge variant="outline" className="text-[10px] gap-1"><Clock3 className="w-3 h-3" />{plan.days} days</Badge>
+                            <Badge variant="outline" className="text-[10px] gap-1"><Users className="w-3 h-3" />{plan.group.join(", ")}</Badge>
+                            <Badge variant="outline" className="text-[10px] gap-1 text-amber-600 border-amber-200 bg-amber-50"><ShieldAlert className="w-3 h-3" />{plan.warning}</Badge>
+                          </div>
+                          <div className="space-y-2 mb-4">
+                            {plan.itinerary.slice(0, 3).map((day) => (
+                              <div key={day.day} className="flex items-center gap-3 text-xs">
+                                <span className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{day.day}</span>
+                                <span className="font-medium text-foreground">{day.title}</span>
+                                <span className="text-muted-foreground">— {day.details}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex gap-2">
+                            <Button className="flex-1 rounded-xl" onClick={() => { setSelectedPlan(plan); setPage("itinerary"); }}>Use This Plan</Button>
+                            <Button variant="outline" className="rounded-xl" onClick={() => toggleWishlist({ id: `wish-${plan.id}`, title: plan.title, category: "Trip Plan" })}>
+                              <BookmarkPlus className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ITINERARY */}
+          {page === "itinerary" && (
+            <motion.div key="itinerary" {...pageVariants}>
+              <SectionHeader icon={CalendarDays} title={selectedPlan?.title || "Itinerary"} subtitle={selectedPlan ? `${selectedPlan.transport} · ${selectedPlan.cost}` : "Choose a plan from Trip Planner"} />
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-8">
+                  <Card className="border-border shadow-none">
+                    <CardContent className="p-6">
+                      {selectedPlan ? (
+                        <div className="space-y-4">
+                          {selectedPlan.itinerary.map((day) => (
+                            <div key={day.day} className="flex gap-4">
+                              <div className="flex flex-col items-center">
+                                <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">{day.day}</div>
+                                {day.day < selectedPlan.itinerary.length && <div className="w-px flex-1 bg-border mt-2" />}
+                              </div>
+                              <div className="flex-1 pb-6">
+                                <h4 className="font-semibold text-sm text-foreground">{day.title}</h4>
+                                <p className="text-xs text-muted-foreground mt-0.5">{day.details}</p>
+                                <div className="flex gap-2 mt-2">
+                                  <Button variant="outline" size="sm" className="text-[10px] h-7 rounded-lg px-2" onClick={() => setPage("hotels")}>+ Hotel</Button>
+                                  <Button variant="outline" size="sm" className="text-[10px] h-7 rounded-lg px-2" onClick={() => setPage("cafes")}>+ Cafe</Button>
                                 </div>
                               </div>
                             </div>
                           ))}
                         </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4">
+                            <CalendarDays className="w-8 h-8 text-muted-foreground/40" />
+                          </div>
+                          <p className="text-sm text-muted-foreground">Open Trip Planner and click "Use this plan"</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="lg:col-span-4">
+                  <Card className="border-border shadow-none">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm">Budget Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {[["Transport", selectedPlan?.transport], ["Stay", selectedPlan?.stay], ["Total", selectedPlan?.cost]].map(([label, val]) => (
+                        <div key={label as string} className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">{label}</span>
+                          <span className="font-medium text-foreground">{val || "—"}</span>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* HOTELS */}
+          {page === "hotels" && (
+            <motion.div key="hotels" {...pageVariants}>
+              <SectionHeader icon={Hotel} title="Hotels & Lodges" subtitle="Find stays along your trekking route" />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {hotels.map((hotel) => (
+                  <Card key={hotel.id} className="border-border shadow-none hover:border-primary/20 hover:shadow-sm transition-all">
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-semibold text-sm text-foreground">{hotel.name}</h3>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" />{hotel.area}</p>
+                        </div>
+                        <Badge variant="secondary" className="text-[10px] rounded-full">{hotel.tag}</Badge>
+                      </div>
+                      <p className="text-sm font-bold text-foreground mb-3">{hotel.price}</p>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...hotel, category: "Hotel" })}>
+                          <Heart className={`w-3 h-3 mr-1 ${isSaved(hotel.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
+                        </Button>
+                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>Add</Button>
                       </div>
                     </CardContent>
                   </Card>
-                ) : (
-                  <div className="text-center py-20">
-                    <Map className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                    <p className="text-sm text-muted-foreground">Select a route to view details</p>
-                  </div>
-                )}
+                ))}
               </div>
             </motion.div>
           )}
 
-          {/* ═══ SAFETY & EMERGENCY ═══ */}
-          {page === "safety" && (
-            <motion.div key="safety" {...pageVariants} className="space-y-6">
-              {/* Emergency contacts */}
-              <div>
-                <h2 className="text-lg font-bold text-foreground mb-1">Emergency Contacts</h2>
-                <p className="text-xs text-muted-foreground mb-4">Save these numbers before your trek</p>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {emergencyContacts.map((contact, i) => (
-                    <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-card border border-border">
-                      <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center flex-shrink-0">
-                        <contact.icon className="w-5 h-5 text-destructive" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-foreground">{contact.name}</p>
-                        <p className="text-xs text-muted-foreground">{contact.desc}</p>
-                        <p className="text-sm font-bold text-foreground mt-1">{contact.number}</p>
-                      </div>
-                      <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0 flex-shrink-0">
-                        <Phone className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* What to do if... */}
-              <div>
-                <h2 className="text-lg font-bold text-foreground mb-1">What To Do If…</h2>
-                <p className="text-xs text-muted-foreground mb-4">Quick survival guides for common emergencies</p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {emergencyGuides.map((guide, i) => (
-                    <Card key={i} className="border-border shadow-none">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${guide.color}`}>
-                            <guide.icon className="w-5 h-5" />
-                          </div>
-                          <CardTitle className="text-sm">{guide.title}</CardTitle>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <ol className="space-y-2">
-                          {guide.steps.map((step, j) => (
-                            <li key={j} className="flex gap-2 text-xs text-muted-foreground">
-                              <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">{j + 1}</span>
-                              <span className="leading-relaxed">{step}</span>
-                            </li>
-                          ))}
-                        </ol>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══ CREW ═══ */}
-          {page === "crew" && (
-            <motion.div key="crew" {...pageVariants} className="space-y-6">
-              {/* Guides */}
-              <div>
-                <h2 className="text-lg font-bold text-foreground mb-1">Guides</h2>
-                <p className="text-xs text-muted-foreground mb-4">Assign an experienced guide for your trek</p>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {guides.map((guide) => (
-                    <Card key={guide.id} className={`border shadow-none transition-all ${assignedGuide?.id === guide.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/20"}`}>
-                      <CardContent className="p-5">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="font-bold text-primary text-sm">{guide.name[0]}</span>
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-sm text-foreground">{guide.name}</h3>
-                              <Badge variant="secondary" className="text-[10px] mt-0.5">{guide.badge}</Badge>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-0.5">
-                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                            <span className="text-xs font-bold text-foreground">{guide.rating}</span>
-                          </div>
-                        </div>
-                        <div className="space-y-1.5 text-xs text-muted-foreground mb-3">
-                          <p><span className="text-foreground font-medium">Experience:</span> {guide.experience}</p>
-                          <p><span className="text-foreground font-medium">Region:</span> {guide.region}</p>
-                          <p><span className="text-foreground font-medium">Languages:</span> {guide.languages}</p>
-                          <p><span className="text-foreground font-medium">Treks led:</span> {guide.treks}</p>
-                        </div>
-                        <p className="text-sm font-bold text-foreground mb-3">{guide.price}</p>
-                        <Button
-                          className="w-full rounded-xl text-xs"
-                          variant={assignedGuide?.id === guide.id ? "outline" : "default"}
-                          onClick={() => setAssignedGuide(assignedGuide?.id === guide.id ? null : guide)}
-                        >
-                          {assignedGuide?.id === guide.id ? "✓ Assigned" : "Assign Guide"}
+          {/* CAFES */}
+          {page === "cafes" && (
+            <motion.div key="cafes" {...pageVariants}>
+              <SectionHeader icon={Coffee} title="Cafes & Restaurants" subtitle="Local food stops along the route" />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {cafes.map((cafe) => (
+                  <Card key={cafe.id} className="border-border shadow-none hover:border-primary/20 hover:shadow-sm transition-all">
+                    <CardContent className="p-5">
+                      <h3 className="font-semibold text-sm text-foreground">{cafe.name}</h3>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="w-3 h-3" />{cafe.area}</p>
+                      <p className="text-sm font-bold text-foreground mt-2 mb-3">{cafe.price}</p>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...cafe, category: "Cafe" })}>
+                          <Heart className={`w-3 h-3 mr-1 ${isSaved(cafe.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
                         </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>Add</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
+            </motion.div>
+          )}
 
-              {/* Porters */}
-              <div>
-                <h2 className="text-lg font-bold text-foreground mb-1">Porters</h2>
-                <p className="text-xs text-muted-foreground mb-4">Hire a porter for luggage support</p>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {porters.map((porter) => (
-                    <Card key={porter.id} className={`border shadow-none transition-all ${assignedPorter?.id === porter.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/20"}`}>
-                      <CardContent className="p-5">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
-                              <span className="font-bold text-foreground text-sm">{porter.name[0]}</span>
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-sm text-foreground">{porter.name}</h3>
-                              <p className="text-[10px] text-muted-foreground">{porter.experience} exp</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-0.5">
-                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                            <span className="text-xs font-bold text-foreground">{porter.rating}</span>
-                          </div>
-                        </div>
-                        <div className="space-y-1 text-xs text-muted-foreground mb-3">
-                          <p><span className="text-foreground font-medium">Capacity:</span> {porter.capacity}</p>
-                          <p><span className="text-foreground font-medium">Region:</span> {porter.region}</p>
-                        </div>
-                        <p className="text-sm font-bold text-foreground mb-3">{porter.price}</p>
-                        <Button
-                          className="w-full rounded-xl text-xs"
-                          variant={assignedPorter?.id === porter.id ? "outline" : "default"}
-                          onClick={() => setAssignedPorter(assignedPorter?.id === porter.id ? null : porter)}
-                        >
-                          {assignedPorter?.id === porter.id ? "✓ Assigned" : "Assign Porter"}
+          {/* PACKAGES */}
+          {page === "packages" && (
+            <motion.div key="packages" {...pageVariants}>
+              <SectionHeader icon={Package} title="Trek Packages" subtitle="Pre-built packages for different budgets" />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {packs.map((pkg) => (
+                  <Card key={pkg.id} className="border-border shadow-none hover:border-primary/20 hover:shadow-sm transition-all">
+                    <CardContent className="p-5">
+                      <h3 className="font-semibold text-foreground">{pkg.name}</h3>
+                      <p className="text-xs text-muted-foreground mt-1">{pkg.days} days · {pkg.price}</p>
+                      <p className="text-xs text-muted-foreground mt-2">Best for: <span className="text-foreground font-medium">{pkg.bestFor}</span></p>
+                      <div className="flex gap-2 mt-4">
+                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => { setSelectedPlan(plans[1]); setPage("itinerary"); }}>Use</Button>
+                        <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...pkg, category: "Package" })}>
+                          <Heart className={`w-3 h-3 mr-1 ${isSaved(pkg.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
                         </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </motion.div>
           )}
 
-          {/* ═══ TICKETS ═══ */}
-          {page === "tickets" && (
-            <motion.div key="tickets" {...pageVariants} className="space-y-6">
-              {/* Permits */}
-              <div>
-                <h2 className="text-lg font-bold text-foreground mb-1">Permits & Entry Tickets</h2>
-                <p className="text-xs text-muted-foreground mb-4">Book required permits for your trek</p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {tickets.map((ticket) => (
-                    <div key={ticket.id} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${bookedTickets.includes(ticket.id) ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
-                      <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
-                        <Ticket className="w-5 h-5 text-muted-foreground" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold text-foreground">{ticket.name}</p>
-                          {ticket.required && <Badge variant="destructive" className="text-[8px] px-1.5 py-0">Required</Badge>}
-                        </div>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{ticket.desc}</p>
-                        <p className="text-sm font-bold text-foreground mt-1">{ticket.price}</p>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant={bookedTickets.includes(ticket.id) ? "outline" : "default"}
-                        className="rounded-xl text-xs flex-shrink-0"
-                        onClick={() => toggleTicket(ticket.id)}
-                      >
-                        {bookedTickets.includes(ticket.id) ? "Booked ✓" : "Book"}
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Nearby Attractions */}
-              <div>
-                <h2 className="text-lg font-bold text-foreground mb-1">Nearby Attractions</h2>
-                <p className="text-xs text-muted-foreground mb-4">Points of interest near trekking routes</p>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {nearbyAttractions.map((attr) => (
-                    <div key={attr.id} className="p-4 rounded-xl bg-card border border-border">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-sm font-semibold text-foreground">{attr.name}</h3>
-                        <Badge variant="secondary" className="text-[10px]">{attr.type}</Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" />{attr.area}</p>
-                      <p className="text-xs font-medium text-foreground mt-1">{attr.price}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══ DASHBOARD ═══ */}
-          {page === "dashboard" && (
-            <motion.div key="dashboard" {...pageVariants} className="space-y-6">
-              <h2 className="text-lg font-bold text-foreground">My Trek Dashboard</h2>
-              <p className="text-xs text-muted-foreground -mt-4">Your personal trek companion — all info in one place</p>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Saved itinerary */}
-                <Card className="border-border shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm flex items-center gap-2"><CalendarDays className="w-4 h-4" /> Active Itinerary</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {selectedPlan ? (
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold text-foreground">{selectedPlan.title}</p>
-                        <p className="text-xs text-muted-foreground">{selectedPlan.transport} · {selectedPlan.cost}</p>
-                        <div className="space-y-1.5 mt-3">
-                          {selectedPlan.itinerary.map((day) => (
-                            <div key={day.day} className="flex items-center gap-2 text-xs">
-                              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[9px] font-bold flex-shrink-0">{day.day}</span>
-                              <span className="text-foreground font-medium">{day.title}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground py-4 text-center">No itinerary selected yet</p>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Assigned crew */}
-                <Card className="border-border shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm flex items-center gap-2"><Users className="w-4 h-4" /> My Crew</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {assignedGuide ? (
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="font-bold text-primary text-xs">{assignedGuide.name[0]}</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{assignedGuide.name}</p>
-                          <p className="text-[10px] text-muted-foreground">Guide · {assignedGuide.phone}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground">No guide assigned</p>
-                    )}
-                    {assignedPorter ? (
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                        <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
-                          <span className="font-bold text-foreground text-xs">{assignedPorter.name[0]}</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{assignedPorter.name}</p>
-                          <p className="text-[10px] text-muted-foreground">Porter · {assignedPorter.phone}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground">No porter assigned</p>
-                    )}
-                    {!assignedGuide && !assignedPorter && (
-                      <Button variant="outline" size="sm" className="w-full rounded-xl text-xs" onClick={() => setPage("crew")}>
-                        Assign Crew →
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Booked tickets */}
-                <Card className="border-border shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm flex items-center gap-2"><Ticket className="w-4 h-4" /> Booked Permits</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {bookedTickets.length > 0 ? (
-                      <div className="space-y-2">
-                        {tickets.filter(t => bookedTickets.includes(t.id)).map(t => (
-                          <div key={t.id} className="flex items-center justify-between text-xs p-2 rounded-lg bg-secondary/50">
-                            <span className="text-foreground font-medium">{t.name}</span>
-                            <span className="text-muted-foreground">{t.price}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-4">
-                        <p className="text-xs text-muted-foreground">No permits booked</p>
-                        <Button variant="outline" size="sm" className="rounded-xl text-xs mt-2" onClick={() => setPage("tickets")}>Book Permits →</Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Emergency quick access */}
-                <Card className="border-border shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Emergency Info</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {emergencyContacts.slice(0, 3).map((c, i) => (
-                      <div key={i} className="flex items-center justify-between text-xs p-2 rounded-lg bg-secondary/50">
-                        <span className="text-foreground font-medium">{c.name}</span>
-                        <span className="font-bold text-foreground">{c.number}</span>
-                      </div>
-                    ))}
-                    <Button variant="outline" size="sm" className="w-full rounded-xl text-xs mt-1" onClick={() => setPage("safety")}>
-                      Full Safety Guide →
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Saved items summary */}
-                <Card className="border-border shadow-none lg:col-span-2">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm flex items-center gap-2"><Heart className="w-4 h-4" /> Saved Items ({wishlist.length})</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {wishlist.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {wishlist.map(item => (
-                          <Badge key={item.id} variant="secondary" className="text-xs gap-1 px-3 py-1">
-                            {item.title || item.name}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground text-center py-4">Save reels, hotels, and plans to see them here</p>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-          )}
-
-
+          {/* INFO */}
           {page === "info" && (
-            <motion.div key="info" {...pageVariants} className="grid gap-3 sm:grid-cols-2">
-              {infoItems.map((item, i) => (
-                <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border">
-                  <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-4 h-4 text-muted-foreground" />
+            <motion.div key="info" {...pageVariants}>
+              <SectionHeader icon={Info} title="Travel Tips" subtitle="Important info for your trek" />
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  { icon: Compass, text: "Autumn and spring are best for Mustang travel." },
+                  { icon: Mountain, text: "Weather and road conditions can change quickly." },
+                  { icon: ShieldAlert, text: "Carry warm layers, cash, power bank, and ID." },
+                  { icon: Info, text: "This MVP compares bus, jeep, and flight templates." },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-card border border-border">
+                    <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
                   </div>
-                  <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-lg border-t border-border lg:hidden z-50">
+        <div className="flex justify-around items-center py-2 px-1 max-w-md mx-auto">
+          {(
+            [
+              ["reels", Play, "Reels"],
+              ["routes", Map, "Routes"],
+              ["dashboard", LayoutDashboard, "Home"],
+              ["safety", Shield, "Safety"],
+              ["info", Info, "More"],
+            ] as [TabKey, React.ElementType, string][]
+          ).map(([key, Icon, label]) => (
+            <button
+              key={key}
+              onClick={() => setPage(key)}
+              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all ${
+                page === key ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <Icon className={`w-5 h-5 ${page === key ? "text-primary" : ""}`} />
+              <span className="text-[10px] font-medium">{label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
