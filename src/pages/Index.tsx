@@ -998,7 +998,442 @@ export default function TrueNepalMustangMVP() {
             </motion.div>
           )}
 
-          {/* ═══ INFO ═══ */}
+          {/* ═══ TREK ROUTES ═══ */}
+          {page === "routes" && (
+            <motion.div key="routes" {...pageVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="lg:col-span-4 space-y-3">
+                <h2 className="text-lg font-bold text-foreground mb-1">Trek Routes</h2>
+                <p className="text-xs text-muted-foreground mb-4">Explore popular trekking routes with detailed stop info</p>
+                {trekRoutes.map((route) => (
+                  <button
+                    key={route.id}
+                    onClick={() => setSelectedRoute(route)}
+                    className={`w-full text-left p-4 rounded-2xl border transition-all ${selectedRoute?.id === route.id ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/20"}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold text-sm text-foreground">{route.name}</h3>
+                      <Badge variant={route.difficulty === "Hard" ? "destructive" : "secondary"} className="text-[10px]">{route.difficulty}</Badge>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      <Badge variant="outline" className="text-[10px] gap-1"><Clock3 className="w-3 h-3" />{route.duration}</Badge>
+                      <Badge variant="outline" className="text-[10px] gap-1"><Mountain className="w-3 h-3" />{route.maxAlt}</Badge>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div className="lg:col-span-8">
+                {selectedRoute ? (
+                  <Card className="border-border shadow-none">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{selectedRoute.name}</CardTitle>
+                        <Badge variant="outline" className="gap-1 text-xs"><MapPin className="w-3 h-3" />{selectedRoute.region}</Badge>
+                      </div>
+                      <CardDescription>{selectedRoute.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                      {/* Route stats */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {[
+                          { label: "Duration", value: selectedRoute.duration, icon: Clock3 },
+                          { label: "Max Altitude", value: selectedRoute.maxAlt, icon: Mountain },
+                          { label: "Best Season", value: selectedRoute.bestSeason, icon: Compass },
+                          { label: "Difficulty", value: selectedRoute.difficulty, icon: Footprints },
+                        ].map((stat) => (
+                          <div key={stat.label} className="p-3 rounded-xl bg-secondary/50 text-center">
+                            <stat.icon className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
+                            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                            <p className="text-xs font-semibold text-foreground mt-0.5">{stat.value}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Weather */}
+                      <div className="p-3 rounded-xl bg-secondary/50 flex items-center gap-3">
+                        <CloudSnow className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                        <div>
+                          <p className="text-xs font-medium text-foreground">Weather: {selectedRoute.weather.temp}</p>
+                          <p className="text-[10px] text-muted-foreground">{selectedRoute.weather.condition}</p>
+                        </div>
+                      </div>
+
+                      {/* Stops timeline */}
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-3">Route Stops</h4>
+                        <div className="space-y-3">
+                          {selectedRoute.stops.map((stop, i) => (
+                            <div key={i} className="flex gap-3">
+                              <div className="flex flex-col items-center">
+                                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">D{stop.day}</div>
+                                {i < selectedRoute.stops.length - 1 && <div className="w-px flex-1 bg-border mt-1" />}
+                              </div>
+                              <div className="flex-1 pb-3">
+                                <div className="flex items-center justify-between">
+                                  <h5 className="text-sm font-semibold text-foreground">{stop.name}</h5>
+                                  <span className="text-[10px] text-muted-foreground">{stop.alt}</span>
+                                </div>
+                                <Badge variant="secondary" className="text-[10px] mt-1">{stop.type}</Badge>
+                                <div className="flex flex-wrap gap-1 mt-1.5">
+                                  {stop.facilities.map((f) => (
+                                    <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">{f}</span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="text-center py-20">
+                    <Map className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">Select a route to view details</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══ SAFETY & EMERGENCY ═══ */}
+          {page === "safety" && (
+            <motion.div key="safety" {...pageVariants} className="space-y-6">
+              {/* Emergency contacts */}
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-1">Emergency Contacts</h2>
+                <p className="text-xs text-muted-foreground mb-4">Save these numbers before your trek</p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {emergencyContacts.map((contact, i) => (
+                    <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-card border border-border">
+                      <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                        <contact.icon className="w-5 h-5 text-destructive" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground">{contact.name}</p>
+                        <p className="text-xs text-muted-foreground">{contact.desc}</p>
+                        <p className="text-sm font-bold text-foreground mt-1">{contact.number}</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="rounded-lg h-8 w-8 p-0 flex-shrink-0">
+                        <Phone className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* What to do if... */}
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-1">What To Do If…</h2>
+                <p className="text-xs text-muted-foreground mb-4">Quick survival guides for common emergencies</p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {emergencyGuides.map((guide, i) => (
+                    <Card key={i} className="border-border shadow-none">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${guide.color}`}>
+                            <guide.icon className="w-5 h-5" />
+                          </div>
+                          <CardTitle className="text-sm">{guide.title}</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <ol className="space-y-2">
+                          {guide.steps.map((step, j) => (
+                            <li key={j} className="flex gap-2 text-xs text-muted-foreground">
+                              <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">{j + 1}</span>
+                              <span className="leading-relaxed">{step}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══ CREW ═══ */}
+          {page === "crew" && (
+            <motion.div key="crew" {...pageVariants} className="space-y-6">
+              {/* Guides */}
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-1">Guides</h2>
+                <p className="text-xs text-muted-foreground mb-4">Assign an experienced guide for your trek</p>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {guides.map((guide) => (
+                    <Card key={guide.id} className={`border shadow-none transition-all ${assignedGuide?.id === guide.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/20"}`}>
+                      <CardContent className="p-5">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="font-bold text-primary text-sm">{guide.name[0]}</span>
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm text-foreground">{guide.name}</h3>
+                              <Badge variant="secondary" className="text-[10px] mt-0.5">{guide.badge}</Badge>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span className="text-xs font-bold text-foreground">{guide.rating}</span>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5 text-xs text-muted-foreground mb-3">
+                          <p><span className="text-foreground font-medium">Experience:</span> {guide.experience}</p>
+                          <p><span className="text-foreground font-medium">Region:</span> {guide.region}</p>
+                          <p><span className="text-foreground font-medium">Languages:</span> {guide.languages}</p>
+                          <p><span className="text-foreground font-medium">Treks led:</span> {guide.treks}</p>
+                        </div>
+                        <p className="text-sm font-bold text-foreground mb-3">{guide.price}</p>
+                        <Button
+                          className="w-full rounded-xl text-xs"
+                          variant={assignedGuide?.id === guide.id ? "outline" : "default"}
+                          onClick={() => setAssignedGuide(assignedGuide?.id === guide.id ? null : guide)}
+                        >
+                          {assignedGuide?.id === guide.id ? "✓ Assigned" : "Assign Guide"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Porters */}
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-1">Porters</h2>
+                <p className="text-xs text-muted-foreground mb-4">Hire a porter for luggage support</p>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {porters.map((porter) => (
+                    <Card key={porter.id} className={`border shadow-none transition-all ${assignedPorter?.id === porter.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/20"}`}>
+                      <CardContent className="p-5">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
+                              <span className="font-bold text-foreground text-sm">{porter.name[0]}</span>
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm text-foreground">{porter.name}</h3>
+                              <p className="text-[10px] text-muted-foreground">{porter.experience} exp</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span className="text-xs font-bold text-foreground">{porter.rating}</span>
+                          </div>
+                        </div>
+                        <div className="space-y-1 text-xs text-muted-foreground mb-3">
+                          <p><span className="text-foreground font-medium">Capacity:</span> {porter.capacity}</p>
+                          <p><span className="text-foreground font-medium">Region:</span> {porter.region}</p>
+                        </div>
+                        <p className="text-sm font-bold text-foreground mb-3">{porter.price}</p>
+                        <Button
+                          className="w-full rounded-xl text-xs"
+                          variant={assignedPorter?.id === porter.id ? "outline" : "default"}
+                          onClick={() => setAssignedPorter(assignedPorter?.id === porter.id ? null : porter)}
+                        >
+                          {assignedPorter?.id === porter.id ? "✓ Assigned" : "Assign Porter"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══ TICKETS ═══ */}
+          {page === "tickets" && (
+            <motion.div key="tickets" {...pageVariants} className="space-y-6">
+              {/* Permits */}
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-1">Permits & Entry Tickets</h2>
+                <p className="text-xs text-muted-foreground mb-4">Book required permits for your trek</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {tickets.map((ticket) => (
+                    <div key={ticket.id} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${bookedTickets.includes(ticket.id) ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
+                      <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
+                        <Ticket className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-foreground">{ticket.name}</p>
+                          {ticket.required && <Badge variant="destructive" className="text-[8px] px-1.5 py-0">Required</Badge>}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">{ticket.desc}</p>
+                        <p className="text-sm font-bold text-foreground mt-1">{ticket.price}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant={bookedTickets.includes(ticket.id) ? "outline" : "default"}
+                        className="rounded-xl text-xs flex-shrink-0"
+                        onClick={() => toggleTicket(ticket.id)}
+                      >
+                        {bookedTickets.includes(ticket.id) ? "Booked ✓" : "Book"}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Nearby Attractions */}
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-1">Nearby Attractions</h2>
+                <p className="text-xs text-muted-foreground mb-4">Points of interest near trekking routes</p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {nearbyAttractions.map((attr) => (
+                    <div key={attr.id} className="p-4 rounded-xl bg-card border border-border">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-sm font-semibold text-foreground">{attr.name}</h3>
+                        <Badge variant="secondary" className="text-[10px]">{attr.type}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" />{attr.area}</p>
+                      <p className="text-xs font-medium text-foreground mt-1">{attr.price}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══ DASHBOARD ═══ */}
+          {page === "dashboard" && (
+            <motion.div key="dashboard" {...pageVariants} className="space-y-6">
+              <h2 className="text-lg font-bold text-foreground">My Trek Dashboard</h2>
+              <p className="text-xs text-muted-foreground -mt-4">Your personal trek companion — all info in one place</p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Saved itinerary */}
+                <Card className="border-border shadow-none">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2"><CalendarDays className="w-4 h-4" /> Active Itinerary</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {selectedPlan ? (
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold text-foreground">{selectedPlan.title}</p>
+                        <p className="text-xs text-muted-foreground">{selectedPlan.transport} · {selectedPlan.cost}</p>
+                        <div className="space-y-1.5 mt-3">
+                          {selectedPlan.itinerary.map((day) => (
+                            <div key={day.day} className="flex items-center gap-2 text-xs">
+                              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[9px] font-bold flex-shrink-0">{day.day}</span>
+                              <span className="text-foreground font-medium">{day.title}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground py-4 text-center">No itinerary selected yet</p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Assigned crew */}
+                <Card className="border-border shadow-none">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2"><Users className="w-4 h-4" /> My Crew</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {assignedGuide ? (
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="font-bold text-primary text-xs">{assignedGuide.name[0]}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{assignedGuide.name}</p>
+                          <p className="text-[10px] text-muted-foreground">Guide · {assignedGuide.phone}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">No guide assigned</p>
+                    )}
+                    {assignedPorter ? (
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                        <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
+                          <span className="font-bold text-foreground text-xs">{assignedPorter.name[0]}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{assignedPorter.name}</p>
+                          <p className="text-[10px] text-muted-foreground">Porter · {assignedPorter.phone}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">No porter assigned</p>
+                    )}
+                    {!assignedGuide && !assignedPorter && (
+                      <Button variant="outline" size="sm" className="w-full rounded-xl text-xs" onClick={() => setPage("crew")}>
+                        Assign Crew →
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Booked tickets */}
+                <Card className="border-border shadow-none">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2"><Ticket className="w-4 h-4" /> Booked Permits</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {bookedTickets.length > 0 ? (
+                      <div className="space-y-2">
+                        {tickets.filter(t => bookedTickets.includes(t.id)).map(t => (
+                          <div key={t.id} className="flex items-center justify-between text-xs p-2 rounded-lg bg-secondary/50">
+                            <span className="text-foreground font-medium">{t.name}</span>
+                            <span className="text-muted-foreground">{t.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-4">
+                        <p className="text-xs text-muted-foreground">No permits booked</p>
+                        <Button variant="outline" size="sm" className="rounded-xl text-xs mt-2" onClick={() => setPage("tickets")}>Book Permits →</Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Emergency quick access */}
+                <Card className="border-border shadow-none">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2"><ShieldAlert className="w-4 h-4" /> Emergency Info</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {emergencyContacts.slice(0, 3).map((c, i) => (
+                      <div key={i} className="flex items-center justify-between text-xs p-2 rounded-lg bg-secondary/50">
+                        <span className="text-foreground font-medium">{c.name}</span>
+                        <span className="font-bold text-foreground">{c.number}</span>
+                      </div>
+                    ))}
+                    <Button variant="outline" size="sm" className="w-full rounded-xl text-xs mt-1" onClick={() => setPage("safety")}>
+                      Full Safety Guide →
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Saved items summary */}
+                <Card className="border-border shadow-none lg:col-span-2">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2"><Heart className="w-4 h-4" /> Saved Items ({wishlist.length})</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {wishlist.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {wishlist.map(item => (
+                          <Badge key={item.id} variant="secondary" className="text-xs gap-1 px-3 py-1">
+                            {item.title || item.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground text-center py-4">Save reels, hotels, and plans to see them here</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
+          )}
+
+
           {page === "info" && (
             <motion.div key="info" {...pageVariants} className="grid gap-3 sm:grid-cols-2">
               {infoItems.map((item, i) => (
