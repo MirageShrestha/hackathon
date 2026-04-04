@@ -124,16 +124,122 @@ const infoItems = [
   { icon: Info, text: "This MVP compares bus, jeep, and flight templates." },
 ];
 
-type TabKey = "reels" | "wishlist" | "planner" | "itinerary" | "hotels" | "cafes" | "packages" | "info" | "profile";
+/* ─── Trek Routes Data ─── */
+const trekRoutes = [
+  {
+    id: "everest", name: "Everest Base Camp", region: "Solukhumbu", difficulty: "Hard",
+    duration: "14 days", maxAlt: "5,364m", bestSeason: "Mar–May, Sep–Nov",
+    weather: { temp: "-6°C to 10°C", condition: "Clear skies, cold nights" },
+    description: "The iconic trek to the foot of the world's highest peak through Sherpa villages and stunning Himalayan panorama.",
+    stops: [
+      { name: "Lukla", day: 1, alt: "2,860m", type: "Gateway", facilities: ["Airport", "Lodge", "Clinic"] },
+      { name: "Namche Bazaar", day: 3, alt: "3,440m", type: "Market Town", facilities: ["ATM", "Hospital", "Shops", "WiFi"] },
+      { name: "Tengboche", day: 5, alt: "3,860m", type: "Monastery", facilities: ["Lodge", "Bakery"] },
+      { name: "Dingboche", day: 7, alt: "4,410m", type: "Acclimatization", facilities: ["Lodge", "Clinic"] },
+      { name: "Gorak Shep", day: 10, alt: "5,164m", type: "Base Camp", facilities: ["Basic Lodge"] },
+      { name: "EBC", day: 11, alt: "5,364m", type: "Destination", facilities: ["None — day visit"] },
+    ],
+  },
+  {
+    id: "annapurna", name: "Annapurna Circuit", region: "Annapurna", difficulty: "Moderate",
+    duration: "12–16 days", maxAlt: "5,416m", bestSeason: "Oct–Nov, Mar–Apr",
+    weather: { temp: "-10°C to 20°C", condition: "Variable, possible snow at Thorong La" },
+    description: "A diverse circuit passing through rice paddies, deep gorges, arid plateaus, and over the Thorong La pass.",
+    stops: [
+      { name: "Besisahar", day: 1, alt: "760m", type: "Gateway", facilities: ["Bus Park", "Lodge", "Market"] },
+      { name: "Manang", day: 6, alt: "3,540m", type: "Acclimatization", facilities: ["Lodge", "Clinic", "Bakery"] },
+      { name: "Thorong La", day: 9, alt: "5,416m", type: "Pass", facilities: ["Tea house only"] },
+      { name: "Muktinath", day: 10, alt: "3,710m", type: "Temple", facilities: ["Lodge", "Temple", "Clinic"] },
+      { name: "Jomsom", day: 12, alt: "2,720m", type: "Town", facilities: ["Airport", "Hospital", "ATM"] },
+    ],
+  },
+  {
+    id: "langtang", name: "Langtang Valley", region: "Langtang", difficulty: "Moderate",
+    duration: "7–10 days", maxAlt: "3,870m", bestSeason: "Oct–Nov, Mar–May",
+    weather: { temp: "-5°C to 15°C", condition: "Generally clear, afternoon clouds" },
+    description: "A less crowded trek through beautiful valley with Tamang culture, cheese factories, and close mountain views.",
+    stops: [
+      { name: "Syabrubesi", day: 1, alt: "1,550m", type: "Gateway", facilities: ["Bus Park", "Lodge"] },
+      { name: "Lama Hotel", day: 2, alt: "2,380m", type: "Rest Stop", facilities: ["Lodge"] },
+      { name: "Langtang Village", day: 3, alt: "3,430m", type: "Village", facilities: ["Lodge", "Cheese Factory"] },
+      { name: "Kyanjin Gompa", day: 4, alt: "3,870m", type: "Monastery", facilities: ["Lodge", "Cheese Factory", "Clinic"] },
+    ],
+  },
+];
+
+/* ─── Safety & Emergency Data ─── */
+const emergencyContacts = [
+  { name: "Nepal Police", number: "100", icon: Shield, desc: "General emergency" },
+  { name: "Tourist Police", number: "1144", icon: UserCheck, desc: "Tourist-specific help" },
+  { name: "Helicopter Rescue", number: "+977-1-4261370", icon: Navigation, desc: "Air rescue services" },
+  { name: "CIWEC Clinic (KTM)", number: "+977-1-4424111", icon: HeartPulse, desc: "Traveler health clinic" },
+  { name: "Nepal Red Cross", number: "+977-1-4270650", icon: HeartPulse, desc: "Disaster & medical" },
+];
+
+const emergencyGuides = [
+  {
+    title: "Lost on the trail?", icon: Map, color: "text-blue-600 bg-blue-50",
+    steps: ["Stay calm and don't wander further.", "Retrace your steps to the last known point.", "Use landmarks — rivers flow downhill to villages.", "Blow a whistle 3 times (international distress).", "If you have signal, call your guide or 1144."],
+  },
+  {
+    title: "Altitude sickness?", icon: Thermometer, color: "text-red-600 bg-red-50",
+    steps: ["Stop ascending immediately.", "Headache + nausea = warning signs.", "Descend 300–500m if symptoms worsen.", "Take Diamox if available (consult doctor).", "Drink plenty of water. Avoid alcohol.", "Seek medical help at nearest clinic."],
+  },
+  {
+    title: "Bad weather / storm?", icon: CloudSnow, color: "text-purple-600 bg-purple-50",
+    steps: ["Seek shelter immediately — lodge or cave.", "Do NOT cross high passes in storms.", "Stay away from ridges, lone trees, metal objects.", "Keep warm layers and emergency food.", "Wait it out — weather changes fast in mountains."],
+  },
+  {
+    title: "Injury on the trail?", icon: HeartPulse, color: "text-orange-600 bg-orange-50",
+    steps: ["Apply basic first aid from your kit.", "Immobilize sprains with bandage/splint.", "For bleeding, apply pressure with clean cloth.", "Call for help — guide, nearby trekkers, or 1144.", "If unable to walk, stay put and signal for rescue."],
+  },
+];
+
+/* ─── Crew Data ─── */
+const guides = [
+  { id: "g1", name: "Pemba Sherpa", experience: "12 years", region: "Everest, Annapurna", languages: "Nepali, English, Hindi", rating: 4.9, treks: 340, badge: "Senior Guide", price: "Rs 3,000/day", phone: "+977-98XXXXXXXX" },
+  { id: "g2", name: "Lakpa Tamang", experience: "8 years", region: "Langtang, Manaslu", languages: "Nepali, English", rating: 4.7, treks: 180, badge: "Certified Guide", price: "Rs 2,500/day", phone: "+977-98XXXXXXXX" },
+  { id: "g3", name: "Dawa Dorje", experience: "15 years", region: "All major routes", languages: "Nepali, English, Japanese", rating: 5.0, treks: 500, badge: "Master Guide", price: "Rs 4,000/day", phone: "+977-98XXXXXXXX" },
+];
+
+const porters = [
+  { id: "pt1", name: "Mingma Rai", experience: "6 years", capacity: "25 kg", region: "Everest", rating: 4.8, price: "Rs 1,500/day", phone: "+977-98XXXXXXXX" },
+  { id: "pt2", name: "Nima Lama", experience: "4 years", capacity: "20 kg", region: "Annapurna", rating: 4.6, price: "Rs 1,200/day", phone: "+977-98XXXXXXXX" },
+  { id: "pt3", name: "Karma Bhote", experience: "10 years", capacity: "30 kg", region: "All routes", rating: 4.9, price: "Rs 1,800/day", phone: "+977-98XXXXXXXX" },
+];
+
+/* ─── Ticketing Data ─── */
+const tickets = [
+  { id: "t1", name: "TIMS Card", type: "Permit", price: "Rs 2,000", desc: "Trekkers' Information Management System — required for all treks", required: true },
+  { id: "t2", name: "Sagarmatha National Park", type: "Entry Permit", price: "Rs 3,000", desc: "Required for Everest region treks", required: true },
+  { id: "t3", name: "Annapurna Conservation Area", type: "Entry Permit", price: "Rs 3,000", desc: "Required for Annapurna region treks", required: true },
+  { id: "t4", name: "Langtang National Park", type: "Entry Permit", price: "Rs 3,000", desc: "Required for Langtang treks", required: true },
+  { id: "t5", name: "Upper Mustang Restricted Permit", type: "Special Permit", price: "USD 500 (10 days)", desc: "Restricted area permit for Upper Mustang", required: false },
+];
+
+const nearbyAttractions = [
+  { id: "a1", name: "Tengboche Monastery", area: "Everest", type: "Cultural", price: "Free" },
+  { id: "a2", name: "Ghorepani Poon Hill", area: "Annapurna", type: "Viewpoint", price: "Rs 100" },
+  { id: "a3", name: "Kyanjin Cheese Factory", area: "Langtang", type: "Cultural", price: "Free" },
+  { id: "a4", name: "Muktinath Temple", area: "Annapurna", type: "Spiritual", price: "Free" },
+  { id: "a5", name: "Kagbeni Old Town", area: "Mustang", type: "Heritage", price: "Free" },
+];
+
+type TabKey = "reels" | "wishlist" | "planner" | "itinerary" | "hotels" | "cafes" | "packages" | "info" | "profile" | "routes" | "safety" | "crew" | "tickets" | "dashboard";
 
 const tabs: [TabKey, React.ElementType, string][] = [
   ["reels", Play, "Reels"],
-  ["wishlist", Heart, "Saved"],
+  ["routes", Map, "Routes"],
   ["planner", Route, "Planner"],
   ["itinerary", CalendarDays, "Itinerary"],
+  ["crew", Users, "Crew"],
   ["hotels", Hotel, "Hotels"],
   ["cafes", Coffee, "Cafes"],
+  ["tickets", Ticket, "Tickets"],
+  ["safety", Shield, "Safety"],
   ["packages", Package, "Packages"],
+  ["wishlist", Heart, "Saved"],
+  ["dashboard", LayoutDashboard, "Dashboard"],
   ["info", Info, "Info"],
 ];
 
