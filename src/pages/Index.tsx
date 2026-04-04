@@ -360,7 +360,13 @@ export default function TrueNepalMustangMVP() {
   const [form, setForm] = useState({ budget: "medium", days: "5", group: "friends", mode: "balanced" });
   const [activeReel, setActiveReel] = useState(reels[0].id);
   const [profileReel, setProfileReel] = useState<typeof reels[0] | null>(null);
+  const [selectedRoute, setSelectedRoute] = useState<typeof trekRoutes[0] | null>(null);
+  const [assignedGuide, setAssignedGuide] = useState<typeof guides[0] | null>(null);
+  const [assignedPorter, setAssignedPorter] = useState<typeof porters[0] | null>(null);
+  const [bookedTickets, setBookedTickets] = useState<string[]>([]);
   const reelContainerRef = useRef<HTMLDivElement>(null);
+
+  const toggleTicket = (id: string) => setBookedTickets(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
 
   const toggleWishlist = (item: any) =>
     setWishlist((p) => p.some((x) => x.id === item.id) ? p.filter((x) => x.id !== item.id) : [...p, item]);
