@@ -242,7 +242,7 @@ export default function TrueNepalMustangMVP() {
                 </div>
                 <div
                   ref={reelContainerRef}
-                  className="h-[540px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
+                  className="h-[600px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
                   style={{ scrollSnapType: "y mandatory" }}
                 >
                   {filteredReels.map((reel, i) => (
