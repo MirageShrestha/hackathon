@@ -262,7 +262,7 @@ export default function TrueNepalMustangMVP() {
               </div>
 
               {/* Detail panel */}
-              <div className="lg:col-span-7 xl:col-span-8 space-y-4">
+              <div className="lg:col-span-5 xl:col-span-4 space-y-4">
                 <Card className="border-border shadow-none">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
