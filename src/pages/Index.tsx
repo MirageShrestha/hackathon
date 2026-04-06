@@ -246,7 +246,7 @@ export default function TrueNepalMustangMVP() {
                   style={{ scrollSnapType: "y mandatory" }}
                 >
                   {filteredReels.map((reel, i) => (
-                    <div key={reel.id} className="snap-start h-[520px] mb-4" style={{ scrollSnapAlign: "start" }}>
+                    <div key={reel.id} className="snap-start h-[580px] mb-4" style={{ scrollSnapAlign: "start" }}>
                       <ReelCard
                         reel={reel}
                         gradient={reelGradients[i % reelGradients.length]}
