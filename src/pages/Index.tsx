@@ -23,21 +23,21 @@ import { TicketsSection } from "@/components/trekking/TicketsSection";
 import { DashboardSection } from "@/components/trekking/DashboardSection";
 import { SectionHeader } from "@/components/trekking/SectionHeader";
 
-const tabs: [TabKey, React.ElementType, string][] = [
-  ["reels", Play, "Reels"],
-  ["routes", Map, "Routes"],
-  ["planner", Route, "Planner"],
-  ["itinerary", CalendarDays, "Itinerary"],
-  ["crew", Users, "Crew"],
-  ["hotels", Hotel, "Hotels"],
-  ["cafes", Coffee, "Cafes"],
-  ["tickets", Ticket, "Tickets"],
-  ["safety", Shield, "Safety"],
-  ["packages", Package, "Packages"],
-  ["wishlist", Heart, "Saved"],
-  ["dashboard", LayoutDashboard, "Dashboard"],
-  ["info", Info, "Info"],
+type TabGroup = {
+  key: string;
+  label: string;
+  icon: React.ElementType;
+  tabs: [TabKey, React.ElementType, string][];
+};
+
+const tabGroups: TabGroup[] = [
+  { key: "discover", label: "Discover", icon: Play, tabs: [["reels", Play, "Reels"], ["routes", Map, "Routes"], ["safety", Shield, "Safety"]] },
+  { key: "plan", label: "Plan", icon: Route, tabs: [["planner", Route, "Planner"], ["itinerary", CalendarDays, "Itinerary"], ["packages", Package, "Packages"]] },
+  { key: "services", label: "Services", icon: Hotel, tabs: [["hotels", Hotel, "Hotels"], ["cafes", Coffee, "Cafes"], ["crew", Users, "Crew"], ["tickets", Ticket, "Tickets"]] },
+  { key: "me", label: "My Trek", icon: LayoutDashboard, tabs: [["dashboard", LayoutDashboard, "Dashboard"], ["wishlist", Heart, "Saved"], ["info", Info, "Tips"]] },
 ];
+
+const allTabs = tabGroups.flatMap(g => g.tabs);
 
 export default function TrueNepalMustangMVP() {
   const [page, setPage] = useState<TabKey>("reels");
