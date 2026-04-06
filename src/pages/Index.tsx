@@ -136,44 +136,94 @@ export default function TrueNepalMustangMVP() {
           </div>
         </motion.header>
 
-        {/* Desktop Tab Navigation */}
-        <div className="mb-6 overflow-x-auto scrollbar-hide -mx-4 px-4 hidden lg:block">
-          <div className="flex gap-1 min-w-max">
-            {tabs.map(([key, Icon, label]) => (
-              <button
-                key={key}
-                onClick={() => setPage(key)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  page === key
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{label}</span>
-              </button>
-            ))}
+        {/* Desktop Tab Navigation - Grouped */}
+        <div className="mb-6 hidden lg:block">
+          <div className="flex gap-6 border-b border-border pb-3 mb-3">
+            {tabGroups.map((group) => {
+              const isActive = group.tabs.some(([key]) => key === page);
+              return (
+                <button
+                  key={group.key}
+                  onClick={() => setPage(group.tabs[0][0])}
+                  className={`flex items-center gap-2 px-1 pb-1 text-sm font-semibold transition-all border-b-2 ${
+                    isActive
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <group.icon className="w-4 h-4" />
+                  {group.label}
+                </button>
+              );
+            })}
           </div>
+          {tabGroups.map((group) => {
+            const isActive = group.tabs.some(([key]) => key === page);
+            if (!isActive) return null;
+            return (
+              <div key={group.key} className="flex gap-1">
+                {group.tabs.map(([key, Icon, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setPage(key)}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
+                      page === key
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Mobile scrollable tabs */}
-        <div className="mb-6 overflow-x-auto scrollbar-hide -mx-4 px-4 lg:hidden">
-          <div className="flex gap-1 min-w-max">
-            {tabs.map(([key, Icon, label]) => (
-              <button
-                key={key}
-                onClick={() => setPage(key)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                  page === key
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{label}</span>
-              </button>
-            ))}
+        {/* Mobile Tab Navigation - Grouped */}
+        <div className="mb-5 lg:hidden">
+          <div className="flex gap-1 overflow-x-auto scrollbar-hide -mx-4 px-4 mb-2">
+            {tabGroups.map((group) => {
+              const isActive = group.tabs.some(([key]) => key === page);
+              return (
+                <button
+                  key={group.key}
+                  onClick={() => setPage(group.tabs[0][0])}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-secondary"
+                  }`}
+                >
+                  <group.icon className="w-3.5 h-3.5" />
+                  {group.label}
+                </button>
+              );
+            })}
           </div>
+          {tabGroups.map((group) => {
+            const isActive = group.tabs.some(([key]) => key === page);
+            if (!isActive) return null;
+            return (
+              <div key={group.key} className="flex gap-1 overflow-x-auto scrollbar-hide -mx-4 px-4">
+                {group.tabs.map(([key, Icon, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setPage(key)}
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all ${
+                      page === key
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:bg-secondary/50"
+                    }`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    {label}
+                  </button>
+                ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Page Content */}
