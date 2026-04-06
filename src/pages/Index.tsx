@@ -646,29 +646,24 @@ export default function TrueNepalMustangMVP() {
         </AnimatePresence>
       </div>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - matches groups */}
       <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-lg border-t border-border lg:hidden z-50">
         <div className="flex justify-around items-center py-2 px-1 max-w-md mx-auto">
-          {(
-            [
-              ["reels", Play, "Reels"],
-              ["routes", Map, "Routes"],
-              ["dashboard", LayoutDashboard, "Home"],
-              ["safety", Shield, "Safety"],
-              ["info", Info, "More"],
-            ] as [TabKey, React.ElementType, string][]
-          ).map(([key, Icon, label]) => (
-            <button
-              key={key}
-              onClick={() => setPage(key)}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all ${
-                page === key ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
-              <Icon className={`w-5 h-5 ${page === key ? "text-primary" : ""}`} />
-              <span className="text-[10px] font-medium">{label}</span>
-            </button>
-          ))}
+          {tabGroups.map((group) => {
+            const isActive = group.tabs.some(([key]) => key === page);
+            return (
+              <button
+                key={group.key}
+                onClick={() => setPage(group.tabs[0][0])}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                <group.icon className={`w-5 h-5 ${isActive ? "text-primary" : ""}`} />
+                <span className="text-[10px] font-medium">{group.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
