@@ -6,6 +6,13 @@ import type {
   EmergencyContact, EmergencyGuide, Guide, Porter, PermitTicket, NearbyAttraction,
 } from "./types";
 
+import everestImg from "@/assets/reels/everest.jpg";
+import annapurnaImg from "@/assets/reels/annapurna.jpg";
+import langtangImg from "@/assets/reels/langtang.jpg";
+import poonhillImg from "@/assets/reels/poonhill.jpg";
+import manasluImg from "@/assets/reels/manaslu.jpg";
+import mustangImg from "@/assets/reels/mustang.jpg";
+
 export const reelGradients = [
   "from-stone-800 via-amber-900 to-stone-900",
   "from-slate-800 via-stone-700 to-slate-900",
@@ -24,6 +31,7 @@ export const reels: Reel[] = [
       { user: "Priya M.", text: "Very helpful for first-time Mustang travelers.", rating: 4 },
     ],
     socials: { instagram: "@mustangmotion", youtube: "MustangMotion" },
+    image: mustangImg,
   },
   {
     id: "r2", title: "Muktinath Escape", subtitle: "Temple and scenic route",
@@ -36,6 +44,7 @@ export const reels: Reel[] = [
       { user: "Rajan T.", text: "Perfect for families with elderly members.", rating: 5 },
     ],
     socials: { instagram: "@sacredsteps", youtube: "SacredStepsNepal" },
+    image: poonhillImg,
   },
   {
     id: "r3", title: "Marpha Apple Trail", subtitle: "Cafes and village vibes",
@@ -48,6 +57,7 @@ export const reels: Reel[] = [
       { user: "Bikash R.", text: "Loved the cafe trail. A must for food lovers.", rating: 4 },
     ],
     socials: { instagram: "@appletrailnepal", youtube: "AppleTrailNepal" },
+    image: annapurnaImg,
   },
 ];
 
