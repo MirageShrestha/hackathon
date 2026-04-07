@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, MessageCircle, Share2, Route, Mountain, MapPin, Clock3, Car, BadgeCheck } from "lucide-react";
+import { Heart, MessageCircle, Share2, Route, MapPin, Clock3, Car, BadgeCheck, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Reel } from "./types";
 
@@ -15,15 +15,31 @@ interface ReelCardProps {
 
 export const ReelCard = ({ reel, gradient, isSaved, onSave, onPlan, onProfile }: ReelCardProps) => (
   <motion.div
-    className={`relative flex-shrink-0 w-full h-[520px] rounded-3xl overflow-hidden bg-gradient-to-br ${gradient} cursor-pointer group`}
+    className={`relative flex-shrink-0 w-full h-[580px] rounded-3xl overflow-hidden cursor-pointer group`}
     initial={{ opacity: 0, scale: 0.96 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.4 }}
   >
-    {/* Decorative mountains */}
-    <div className="absolute inset-0 opacity-10 pointer-events-none">
-      <Mountain className="absolute top-12 right-8 w-32 h-32 text-white/20" />
-      <Mountain className="absolute bottom-32 left-6 w-20 h-20 text-white/15 rotate-12" />
+    {/* Background image */}
+    {reel.image ? (
+      <img
+        src={reel.image}
+        alt={reel.title}
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="lazy"
+      />
+    ) : (
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
+    )}
+
+    {/* Dark overlay for readability */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
+
+    {/* Play button center */}
+    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+      <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
+        <Play className="w-7 h-7 text-white fill-white ml-1" />
+      </div>
     </div>
 
     {/* Top bar */}
@@ -50,7 +66,7 @@ export const ReelCard = ({ reel, gradient, isSaved, onSave, onPlan, onProfile }:
     </div>
 
     {/* Bottom content */}
-    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-5 pt-20">
+    <div className="absolute bottom-0 left-0 right-0 p-5 pt-20 z-10">
       <button onClick={onProfile} className="flex items-center gap-3 mb-3 group/avatar">
         <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 group-hover/avatar:border-white/70 transition-all">
           <span className="text-white font-bold text-sm">{reel.creator[0]}</span>

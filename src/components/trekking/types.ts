@@ -17,6 +17,7 @@ export interface Reel {
   bio: string;
   reviews: { user: string; text: string; rating: number }[];
   socials: { instagram: string; youtube: string };
+  image?: string;
 }
 
 export interface Hotel {
