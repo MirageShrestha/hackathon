@@ -5,6 +5,7 @@ import {
   Route, Clock3, Users, ShieldAlert, BookmarkPlus, X, MapPin, Star,
   BadgeCheck, ChevronRight, Car, Map, Ticket, LayoutDashboard, Shield,
   Compass, Phone, Wifi, ChevronDown, ChevronUp,
+  Hotel as HotelIcon,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
