@@ -52,6 +52,10 @@ export default function TrueNepalMustangMVP() {
   const [assignedGuide, setAssignedGuide] = useState<Guide | null>(null);
   const [assignedPorter, setAssignedPorter] = useState<Porter | null>(null);
   const [bookedTickets, setBookedTickets] = useState<string[]>([]);
+  const [dayHotels, setDayHotels] = useState<Record<number, Hotel>>({});
+  const [dayCafes, setDayCafes] = useState<Record<number, Cafe>>({});
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
+  const [addingType, setAddingType] = useState<{ day: number; type: "hotel" | "cafe" } | null>(null);
   const reelContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleTicket = (id: string) => setBookedTickets(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
