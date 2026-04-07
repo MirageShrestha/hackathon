@@ -502,23 +502,192 @@ export default function TrueNepalMustangMVP() {
                   <Card className="border-border shadow-none">
                     <CardContent className="p-6">
                       {selectedPlan ? (
-                        <div className="space-y-4">
-                          {selectedPlan.itinerary.map((day) => (
-                            <div key={day.day} className="flex gap-4">
-                              <div className="flex flex-col items-center">
-                                <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">{day.day}</div>
-                                {day.day < selectedPlan.itinerary.length && <div className="w-px flex-1 bg-border mt-2" />}
+                        <div className="space-y-2">
+                          {selectedPlan.itinerary.map((day) => {
+                            const hotel = dayHotels[day.day];
+                            const cafe = dayCafes[day.day];
+                            const isExpanded = expandedDay === day.day;
+                            const isAddingHotel = addingType?.day === day.day && addingType.type === "hotel";
+                            const isAddingCafe = addingType?.day === day.day && addingType.type === "cafe";
+
+                            return (
+                              <div key={day.day} className="rounded-2xl border border-border bg-card overflow-hidden transition-all">
+                                {/* Day header */}
+                                <button
+                                  onClick={() => setExpandedDay(isExpanded ? null : day.day)}
+                                  className="w-full flex items-center gap-4 p-4 hover:bg-secondary/30 transition-colors"
+                                >
+                                  <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                    D{day.day}
+                                  </div>
+                                  <div className="flex-1 text-left min-w-0">
+                                    <h4 className="font-semibold text-sm text-foreground">{day.title}</h4>
+                                    <p className="text-xs text-muted-foreground mt-0.5">{day.details}</p>
+                                  </div>
+                                  <div className="flex items-center gap-2 flex-shrink-0">
+                                    {hotel && (
+                                      <Badge variant="secondary" className="text-[10px] gap-1 rounded-full">
+                                        <HotelIcon className="w-3 h-3" /> {hotel.name.split(" ")[0]}
+                                      </Badge>
+                                    )}
+                                    {cafe && (
+                                      <Badge variant="secondary" className="text-[10px] gap-1 rounded-full">
+                                        <Coffee className="w-3 h-3" /> {cafe.name.split(" ")[0]}
+                                      </Badge>
+                                    )}
+                                    {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                                  </div>
+                                </button>
+
+                                {/* Expanded content */}
+                                {isExpanded && (
+                                  <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="border-t border-border"
+                                  >
+                                    <div className="p-4 space-y-4">
+                                      {/* Assigned Hotel */}
+                                      <div>
+                                        <div className="flex items-center justify-between mb-2">
+                                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Stay</span>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs rounded-lg"
+                                            onClick={() => setAddingType(isAddingHotel ? null : { day: day.day, type: "hotel" })}
+                                          >
+                                            {hotel ? "Change" : "+ Add Hotel"}
+                                          </Button>
+                                        </div>
+                                        {hotel && !isAddingHotel && (
+                                          <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                              <HotelIcon className="w-4 h-4 text-primary" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <p className="text-sm font-medium text-foreground">{hotel.name}</p>
+                                              <p className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" />{hotel.area} · {hotel.price}</p>
+                                              {hotel.amenities && (
+                                                <div className="flex gap-1 mt-1.5 flex-wrap">
+                                                  {hotel.amenities.map(a => (
+                                                    <Badge key={a} variant="outline" className="text-[9px] rounded-full px-1.5 py-0">{a}</Badge>
+                                                  ))}
+                                                </div>
+                                              )}
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                              <div className="flex items-center gap-0.5 text-xs">
+                                                <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                                                <span className="font-medium">{hotel.rating}</span>
+                                              </div>
+                                              <Badge variant="secondary" className="text-[9px] mt-1 rounded-full">{hotel.tag}</Badge>
+                                            </div>
+                                          </div>
+                                        )}
+                                        {isAddingHotel && (
+                                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                                            {hotels.map((h) => (
+                                              <button
+                                                key={h.id}
+                                                onClick={() => {
+                                                  setDayHotels(prev => ({ ...prev, [day.day]: h }));
+                                                  setAddingType(null);
+                                                }}
+                                                className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                                                  hotel?.id === h.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/30 hover:bg-secondary/30"
+                                                }`}
+                                              >
+                                                <HotelIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                                <div className="flex-1 min-w-0">
+                                                  <p className="text-sm font-medium text-foreground">{h.name}</p>
+                                                  <p className="text-xs text-muted-foreground">{h.area} · {h.price}</p>
+                                                </div>
+                                                <div className="flex items-center gap-0.5 text-xs flex-shrink-0">
+                                                  <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                                                  <span>{h.rating}</span>
+                                                </div>
+                                              </button>
+                                            ))}
+                                          </div>
+                                        )}
+                                        {!hotel && !isAddingHotel && (
+                                          <p className="text-xs text-muted-foreground/60 italic">No hotel assigned yet</p>
+                                        )}
+                                      </div>
+
+                                      {/* Assigned Cafe */}
+                                      <div>
+                                        <div className="flex items-center justify-between mb-2">
+                                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Food Stop</span>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs rounded-lg"
+                                            onClick={() => setAddingType(isAddingCafe ? null : { day: day.day, type: "cafe" })}
+                                          >
+                                            {cafe ? "Change" : "+ Add Cafe"}
+                                          </Button>
+                                        </div>
+                                        {cafe && !isAddingCafe && (
+                                          <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
+                                            <div className="w-10 h-10 rounded-lg bg-accent/50 flex items-center justify-center">
+                                              <Coffee className="w-4 h-4 text-foreground" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <p className="text-sm font-medium text-foreground">{cafe.name}</p>
+                                              <p className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" />{cafe.area} · {cafe.price}</p>
+                                              {cafe.specialty && (
+                                                <p className="text-[11px] text-primary mt-1">★ {cafe.specialty}</p>
+                                              )}
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                              <div className="flex items-center gap-0.5 text-xs">
+                                                <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                                                <span className="font-medium">{cafe.rating}</span>
+                                              </div>
+                                              {cafe.openHours && <p className="text-[9px] text-muted-foreground mt-1">{cafe.openHours}</p>}
+                                            </div>
+                                          </div>
+                                        )}
+                                        {isAddingCafe && (
+                                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                                            {cafes.map((c) => (
+                                              <button
+                                                key={c.id}
+                                                onClick={() => {
+                                                  setDayCafes(prev => ({ ...prev, [day.day]: c }));
+                                                  setAddingType(null);
+                                                }}
+                                                className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                                                  cafe?.id === c.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/30 hover:bg-secondary/30"
+                                                }`}
+                                              >
+                                                <Coffee className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                                <div className="flex-1 min-w-0">
+                                                  <p className="text-sm font-medium text-foreground">{c.name}</p>
+                                                  <p className="text-xs text-muted-foreground">{c.area} · {c.price}</p>
+                                                  {c.specialty && <p className="text-[10px] text-primary">★ {c.specialty}</p>}
+                                                </div>
+                                                <div className="flex items-center gap-0.5 text-xs flex-shrink-0">
+                                                  <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                                                  <span>{c.rating}</span>
+                                                </div>
+                                              </button>
+                                            ))}
+                                          </div>
+                                        )}
+                                        {!cafe && !isAddingCafe && (
+                                          <p className="text-xs text-muted-foreground/60 italic">No cafe assigned yet</p>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
                               </div>
-                              <div className="flex-1 pb-6">
-                                <h4 className="font-semibold text-sm text-foreground">{day.title}</h4>
-                                <p className="text-xs text-muted-foreground mt-0.5">{day.details}</p>
-                                <div className="flex gap-2 mt-2">
-                                  <Button variant="outline" size="sm" className="text-[10px] h-7 rounded-lg px-2" onClick={() => setPage("hotels")}>+ Hotel</Button>
-                                  <Button variant="outline" size="sm" className="text-[10px] h-7 rounded-lg px-2" onClick={() => setPage("cafes")}>+ Cafe</Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       ) : (
                         <div className="text-center py-12">
@@ -526,12 +695,15 @@ export default function TrueNepalMustangMVP() {
                             <CalendarDays className="w-8 h-8 text-muted-foreground/40" />
                           </div>
                           <p className="text-sm text-muted-foreground">Open Trip Planner and click "Use this plan"</p>
+                          <Button variant="outline" className="mt-4 rounded-xl" onClick={() => setPage("planner")}>
+                            <Route className="w-4 h-4 mr-2" /> Go to Planner
+                          </Button>
                         </div>
                       )}
                     </CardContent>
                   </Card>
                 </div>
-                <div className="lg:col-span-4">
+                <div className="lg:col-span-4 space-y-4">
                   <Card className="border-border shadow-none">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-sm">Budget Summary</CardTitle>
@@ -545,6 +717,40 @@ export default function TrueNepalMustangMVP() {
                       ))}
                     </CardContent>
                   </Card>
+
+                  {/* Assigned services summary */}
+                  {selectedPlan && (
+                    <Card className="border-border shadow-none">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm">Booked Services</CardTitle>
+                        <CardDescription className="text-xs">Hotels & cafes assigned to your itinerary</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {Object.keys(dayHotels).length === 0 && Object.keys(dayCafes).length === 0 ? (
+                          <p className="text-xs text-muted-foreground/60 italic">Expand a day to add hotels & cafes</p>
+                        ) : (
+                          <>
+                            {Object.entries(dayHotels).map(([d, h]) => (
+                              <div key={d} className="flex items-center gap-2 text-xs">
+                                <Badge variant="outline" className="text-[9px] rounded-full">D{d}</Badge>
+                                <HotelIcon className="w-3 h-3 text-muted-foreground" />
+                                <span className="text-foreground font-medium">{h.name}</span>
+                                <span className="text-muted-foreground ml-auto">{h.price}</span>
+                              </div>
+                            ))}
+                            {Object.entries(dayCafes).map(([d, c]) => (
+                              <div key={d} className="flex items-center gap-2 text-xs">
+                                <Badge variant="outline" className="text-[9px] rounded-full">D{d}</Badge>
+                                <Coffee className="w-3 h-3 text-muted-foreground" />
+                                <span className="text-foreground font-medium">{c.name}</span>
+                                <span className="text-muted-foreground ml-auto">{c.price}</span>
+                              </div>
+                            ))}
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -553,7 +759,7 @@ export default function TrueNepalMustangMVP() {
           {/* HOTELS */}
           {page === "hotels" && (
             <motion.div key="hotels" {...pageVariants}>
-              <SectionHeader icon={Hotel} title="Hotels & Lodges" subtitle="Find stays along your trekking route" />
+              <SectionHeader icon={HotelIcon} title="Hotels & Lodges" subtitle="Find stays along your trekking route" />
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {hotels.map((hotel) => (
                   <Card key={hotel.id} className="border-border shadow-none hover:border-primary/20 hover:shadow-sm transition-all">
@@ -563,14 +769,32 @@ export default function TrueNepalMustangMVP() {
                           <h3 className="font-semibold text-sm text-foreground">{hotel.name}</h3>
                           <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" />{hotel.area}</p>
                         </div>
-                        <Badge variant="secondary" className="text-[10px] rounded-full">{hotel.tag}</Badge>
+                        <div className="text-right">
+                          <Badge variant="secondary" className="text-[10px] rounded-full">{hotel.tag}</Badge>
+                          {hotel.rating && (
+                            <div className="flex items-center gap-0.5 text-xs mt-1 justify-end">
+                              <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                              <span className="font-medium">{hotel.rating}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-sm font-bold text-foreground mb-3">{hotel.price}</p>
+                      {hotel.amenities && (
+                        <div className="flex gap-1 flex-wrap mb-2">
+                          {hotel.amenities.map(a => (
+                            <Badge key={a} variant="outline" className="text-[9px] rounded-full px-1.5 py-0">{a}</Badge>
+                          ))}
+                        </div>
+                      )}
+                      <p className="text-sm font-bold text-foreground mb-1">{hotel.price}</p>
+                      {hotel.phone && <p className="text-[10px] text-muted-foreground flex items-center gap-1 mb-3"><Phone className="w-3 h-3" />{hotel.phone}</p>}
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...hotel, category: "Hotel" })}>
                           <Heart className={`w-3 h-3 mr-1 ${isSaved(hotel.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
                         </Button>
-                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>Add</Button>
+                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>
+                          <CalendarDays className="w-3 h-3 mr-1" /> Add to Trip
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -587,14 +811,32 @@ export default function TrueNepalMustangMVP() {
                 {cafes.map((cafe) => (
                   <Card key={cafe.id} className="border-border shadow-none hover:border-primary/20 hover:shadow-sm transition-all">
                     <CardContent className="p-5">
-                      <h3 className="font-semibold text-sm text-foreground">{cafe.name}</h3>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="w-3 h-3" />{cafe.area}</p>
-                      <p className="text-sm font-bold text-foreground mt-2 mb-3">{cafe.price}</p>
+                      <div className="flex items-start justify-between mb-1">
+                        <div>
+                          <h3 className="font-semibold text-sm text-foreground">{cafe.name}</h3>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" />{cafe.area}</p>
+                        </div>
+                        {cafe.rating && (
+                          <div className="flex items-center gap-0.5 text-xs">
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span className="font-medium">{cafe.rating}</span>
+                          </div>
+                        )}
+                      </div>
+                      {cafe.specialty && (
+                        <p className="text-xs text-primary font-medium mt-1.5">★ {cafe.specialty}</p>
+                      )}
+                      <div className="flex items-center justify-between mt-2 mb-3">
+                        <p className="text-sm font-bold text-foreground">{cafe.price}</p>
+                        {cafe.openHours && <p className="text-[10px] text-muted-foreground">{cafe.openHours}</p>}
+                      </div>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" className="flex-1 rounded-xl text-xs" onClick={() => toggleWishlist({ ...cafe, category: "Cafe" })}>
                           <Heart className={`w-3 h-3 mr-1 ${isSaved(cafe.id) ? "fill-red-500 text-red-500" : ""}`} /> Save
                         </Button>
-                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>Add</Button>
+                        <Button size="sm" className="flex-1 rounded-xl text-xs" onClick={() => setPage("itinerary")}>
+                          <CalendarDays className="w-3 h-3 mr-1" /> Add to Trip
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
