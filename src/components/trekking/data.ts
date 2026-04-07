@@ -62,15 +62,19 @@ export const reels: Reel[] = [
 ];
 
 export const hotels: Hotel[] = [
-  { id: "h1", name: "Jomsom Eco Lodge", area: "Jomsom", price: "Rs 2,000/night", tag: "Budget" },
-  { id: "h2", name: "Marpha Apple Stay", area: "Marpha", price: "Rs 3,500/night", tag: "Scenic" },
-  { id: "h3", name: "Muktinath Family Inn", area: "Muktinath", price: "Rs 4,000/night", tag: "Family" },
+  { id: "h1", name: "Jomsom Eco Lodge", area: "Jomsom", price: "Rs 2,000/night", tag: "Budget", phone: "+977-69-440123", rating: 4.3, amenities: ["WiFi", "Hot Water", "Restaurant"] },
+  { id: "h2", name: "Marpha Apple Stay", area: "Marpha", price: "Rs 3,500/night", tag: "Scenic", phone: "+977-69-440456", rating: 4.6, amenities: ["Garden", "Hot Water", "Mountain View"] },
+  { id: "h3", name: "Muktinath Family Inn", area: "Muktinath", price: "Rs 4,000/night", tag: "Family", phone: "+977-69-440789", rating: 4.5, amenities: ["Heater", "Restaurant", "Parking"] },
+  { id: "h4", name: "Kagbeni Heritage House", area: "Kagbeni", price: "Rs 2,500/night", tag: "Heritage", phone: "+977-69-440321", rating: 4.4, amenities: ["Rooftop", "Hot Water", "WiFi"] },
+  { id: "h5", name: "Pokhara Lakeside Inn", area: "Pokhara", price: "Rs 3,000/night", tag: "Comfort", phone: "+977-61-462555", rating: 4.7, amenities: ["Lake View", "WiFi", "AC", "Restaurant"] },
 ];
 
 export const cafes: Cafe[] = [
-  { id: "c1", name: "Apple Pie Corner", area: "Marpha", price: "Rs 300–700" },
-  { id: "c2", name: "Thakali Meal Stop", area: "Jomsom", price: "Rs 400–900" },
-  { id: "c3", name: "Temple Tea Point", area: "Muktinath", price: "Rs 150–350" },
+  { id: "c1", name: "Apple Pie Corner", area: "Marpha", price: "Rs 300–700", specialty: "Apple Pie & Cider", rating: 4.8, openHours: "7 AM – 8 PM" },
+  { id: "c2", name: "Thakali Meal Stop", area: "Jomsom", price: "Rs 400–900", specialty: "Thakali Dal Bhat Set", rating: 4.5, openHours: "6 AM – 9 PM" },
+  { id: "c3", name: "Temple Tea Point", area: "Muktinath", price: "Rs 150–350", specialty: "Butter Tea & Momos", rating: 4.3, openHours: "6 AM – 7 PM" },
+  { id: "c4", name: "Kagbeni Coffee House", area: "Kagbeni", price: "Rs 200–500", specialty: "Espresso & Pancakes", rating: 4.6, openHours: "7 AM – 8 PM" },
+  { id: "c5", name: "Lakeside Brew", area: "Pokhara", price: "Rs 250–600", specialty: "Craft Coffee & Pastries", rating: 4.7, openHours: "6:30 AM – 9 PM" },
 ];
 
 export const packs: TrekPackage[] = [
