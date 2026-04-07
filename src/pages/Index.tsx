@@ -34,7 +34,7 @@ type TabGroup = {
 const tabGroups: TabGroup[] = [
   { key: "discover", label: "Discover", icon: Play, tabs: [["reels", Play, "Reels"], ["routes", Map, "Routes"], ["safety", Shield, "Safety"]] },
   { key: "plan", label: "Plan", icon: Route, tabs: [["planner", Route, "Planner"], ["itinerary", CalendarDays, "Itinerary"], ["packages", Package, "Packages"]] },
-  { key: "services", label: "Services", icon: Hotel, tabs: [["hotels", Hotel, "Hotels"], ["cafes", Coffee, "Cafes"], ["crew", Users, "Crew"], ["tickets", Ticket, "Tickets"]] },
+  { key: "services", label: "Services", icon: HotelIcon, tabs: [["hotels", HotelIcon, "Hotels"], ["cafes", Coffee, "Cafes"], ["crew", Users, "Crew"], ["tickets", Ticket, "Tickets"]] },
   { key: "me", label: "My Trek", icon: LayoutDashboard, tabs: [["dashboard", LayoutDashboard, "Dashboard"], ["wishlist", Heart, "Saved"], ["info", Info, "Tips"]] },
 ];
 
