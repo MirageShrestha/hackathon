@@ -26,6 +26,9 @@ export interface Hotel {
   area: string;
   price: string;
   tag: string;
+  phone?: string;
+  rating?: number;
+  amenities?: string[];
 }
 
 export interface Cafe {
@@ -33,6 +36,9 @@ export interface Cafe {
   name: string;
   area: string;
   price: string;
+  specialty?: string;
+  rating?: number;
+  openHours?: string;
 }
 
 export interface TrekPackage {
