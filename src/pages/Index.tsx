@@ -1,10 +1,10 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Heart, CalendarDays, Hotel, Coffee, Package, Info, Play, Mountain,
+  Heart, CalendarDays, Coffee, Package, Info, Play, Mountain,
   Route, Clock3, Users, ShieldAlert, BookmarkPlus, X, MapPin, Star,
   BadgeCheck, ChevronRight, Car, Map, Ticket, LayoutDashboard, Shield,
-  Compass,
+  Compass, Phone, Wifi, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
