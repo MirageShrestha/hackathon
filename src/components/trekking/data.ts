@@ -145,12 +145,24 @@ export const cafes: Cafe[] = [
 ];
 
 export const packs: TrekPackage[] = [
+  { id: "p0", name: "Poon Hill Budget Trek", days: 3, price: "Rs 5,200", bestFor: "Solo or friends on tight budget" },
   { id: "p1", name: "Budget Mustang Escape", days: 5, price: "Rs 12,000–16,000", bestFor: "Students and friends" },
   { id: "p2", name: "Balanced Mustang Route", days: 5, price: "Rs 18,000–25,000", bestFor: "Most travelers" },
   { id: "p3", name: "Comfort Mustang Journey", days: 5, price: "Rs 35,000+", bestFor: "Families" },
 ];
 
 export const plans: TrekPlan[] = [
+  {
+    id: "poonhill-budget", title: "Poon Hill Budget Plan", badge: "Cheapest", budgetType: "low", days: 3,
+    group: ["solo", "friends"], mode: "cheapest", cost: "Rs 5,200",
+    transport: "Night Bus + Jeep + Trek", stay: "Budget lodge (bed+dinner+breakfast)",
+    warning: "10-hour trek on Day 2. Carry snacks & water.",
+    itinerary: [
+      { day: 1, title: "Kathmandu → Pokhara", details: "Night bus (Rs 1,000) + Veg dinner on the way (Rs 250)" },
+      { day: 2, title: "Pokhara → Birethanti → Ghorepani", details: "Black tea (Rs 60) • Jeep to Birethanti (Rs 500) • Breakfast: egg, bread, potato, tea (Rs 150) • Half veg chowmein (Rs 125) • Trek to Upper Ghorepani (~10 hrs) • Hotel: bed+dinner+breakfast (Rs 1,200)" },
+      { day: 3, title: "Poon Hill → Tikhedhunga → Pokhara → Kathmandu", details: "Poon Hill sunrise trek (4:45 AM) • Breakfast (Rs 215) • Return trek to Tikhedhunga (~4 hrs) • Veg chowmein (Rs 50) • Bus to Pokhara (Rs 500) • Chicken momo (Rs 150) • Night bus to Kathmandu (Rs 1,000)" },
+    ],
+  },
   {
     id: "budget", title: "Budget Plan", badge: "Cheapest", budgetType: "low", days: 5,
     group: ["solo", "friends"], mode: "cheapest", cost: "Rs 12,000–16,000",
