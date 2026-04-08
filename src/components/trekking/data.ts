@@ -21,6 +21,20 @@ export const reelGradients = [
 
 export const reels: Reel[] = [
   {
+    id: "r0", title: "Poon Hill Trek under Rs 5200", subtitle: "Cheapest budget trek guide",
+    place: "Poon Hill", duration: "3 days", budget: "Rs 5,200", season: "Oct–Apr",
+    transport: "Bus + Jeep + Trek", type: "Budget", creator: "giggrow",
+    handle: "@giggrow", description: "Budget-friendly Poon Hill trek under Rs 5200 including transport, food, and stay. Complete 3-day itinerary from Kathmandu with exact costs.",
+    rating: 4.9, trips: 56, followers: "45.2K", bio: "Nepal travel hacks & budget trek guides. Proving you don't need money to see the mountains.",
+    reviews: [
+      { user: "Rohan K.", text: "Did this exact trip. Actually came under 5200!", rating: 5 },
+      { user: "Sneha P.", text: "Best budget guide for Poon Hill. Super detailed.", rating: 5 },
+    ],
+    socials: { instagram: "@giggrow", youtube: "giggrow" },
+    image: poonhillImg,
+    video: "/reels/poonhill-budget.mp4",
+  },
+  {
     id: "r1", title: "Jeep Journey to Jomsom", subtitle: "Rough roads, mountain views",
     place: "Jomsom", duration: "5 days", budget: "Rs 12,000–18,000", season: "Oct–Nov",
     transport: "Bus + Shared Jeep", type: "Adventure", creator: "Mustang Motion",
@@ -85,6 +99,16 @@ export const hotels: Hotel[] = [
   // Kagbeni
   { id: "h1g", name: "Kagbeni Heritage House", area: "Kagbeni", price: "Rs 2,500/night", tag: "Heritage", phone: "+977-69-440321", rating: 4.4, amenities: ["Rooftop", "Hot Water", "WiFi"] },
   { id: "h2g", name: "Red House Lodge", area: "Kagbeni", price: "Rs 1,600/night", tag: "Budget", phone: "+977-69-440322", rating: 4.2, amenities: ["Hot Water", "Restaurant"] },
+  // Birethanti
+  { id: "h1b", name: "Birethanti Guest House", area: "Birethanti", price: "Rs 800/night", tag: "Budget", phone: "+977-69-550101", rating: 4.0, amenities: ["Hot Water", "Garden"] },
+  { id: "h2b", name: "Riverside Lodge Birethanti", area: "Birethanti", price: "Rs 1,200/night", tag: "Comfort", phone: "+977-69-550102", rating: 4.3, amenities: ["Restaurant", "Hot Water", "WiFi"] },
+  // Ghorepani / Upper Ghorepani
+  { id: "h1gh", name: "Poon Hill Guest House", area: "Ghorepani", price: "Rs 1,200/night", tag: "Trekker", phone: "+977-69-550201", rating: 4.4, amenities: ["Hot Water", "Restaurant", "Mountain View"] },
+  { id: "h2gh", name: "Sunrise Lodge Ghorepani", area: "Ghorepani", price: "Rs 1,000/night", tag: "Budget", phone: "+977-69-550202", rating: 4.2, amenities: ["Hot Water", "Dining Hall"] },
+  { id: "h3gh", name: "Fishtail View Lodge", area: "Ghorepani", price: "Rs 1,500/night", tag: "Scenic", phone: "+977-69-550203", rating: 4.6, amenities: ["Mountain View", "Restaurant", "Hot Water"] },
+  // Tikhedhunga
+  { id: "h1t", name: "Tikhedhunga Rest House", area: "Tikhedhunga", price: "Rs 600/night", tag: "Basic", phone: "+977-69-550301", rating: 3.8, amenities: ["Hot Water"] },
+  { id: "h2t", name: "Waterfall Lodge", area: "Tikhedhunga", price: "Rs 900/night", tag: "Budget", phone: "+977-69-550302", rating: 4.1, amenities: ["Hot Water", "Restaurant"] },
 ];
 
 export const cafes: Cafe[] = [
@@ -109,15 +133,36 @@ export const cafes: Cafe[] = [
   // Kagbeni
   { id: "c1g", name: "Kagbeni Coffee House", area: "Kagbeni", price: "Rs 200–500", specialty: "Espresso & Pancakes", rating: 4.6, openHours: "7 AM – 8 PM" },
   { id: "c2g", name: "Yak Herder's Cafe", area: "Kagbeni", price: "Rs 150–350", specialty: "Yak Cheese & Tea", rating: 4.3, openHours: "6 AM – 7 PM" },
+  // Birethanti
+  { id: "c1b", name: "Riverside Snack Bar", area: "Birethanti", price: "Rs 100–300", specialty: "Egg Bread & Tea", rating: 4.2, openHours: "5:30 AM – 8 PM" },
+  { id: "c2b", name: "Trail Start Cafe", area: "Birethanti", price: "Rs 150–400", specialty: "Chowmein & Momo", rating: 4.0, openHours: "6 AM – 7 PM" },
+  // Ghorepani
+  { id: "c1gh", name: "Sunrise View Cafe", area: "Ghorepani", price: "Rs 150–350", specialty: "Thukpa & Tea", rating: 4.4, openHours: "5 AM – 8 PM" },
+  { id: "c2gh", name: "Mountain Kitchen", area: "Ghorepani", price: "Rs 200–500", specialty: "Dal Bhat & Pancakes", rating: 4.3, openHours: "6 AM – 9 PM" },
+  // Tikhedhunga
+  { id: "c1t", name: "Tikhe Roadside Eatery", area: "Tikhedhunga", price: "Rs 50–200", specialty: "Veg Chowmein & Tea", rating: 4.0, openHours: "6 AM – 6 PM" },
+  { id: "c2t", name: "Hilltop Snack Point", area: "Tikhedhunga", price: "Rs 100–250", specialty: "Noodles & Juice", rating: 3.9, openHours: "7 AM – 5 PM" },
 ];
 
 export const packs: TrekPackage[] = [
+  { id: "p0", name: "Poon Hill Budget Trek", days: 3, price: "Rs 5,200", bestFor: "Solo or friends on tight budget" },
   { id: "p1", name: "Budget Mustang Escape", days: 5, price: "Rs 12,000–16,000", bestFor: "Students and friends" },
   { id: "p2", name: "Balanced Mustang Route", days: 5, price: "Rs 18,000–25,000", bestFor: "Most travelers" },
   { id: "p3", name: "Comfort Mustang Journey", days: 5, price: "Rs 35,000+", bestFor: "Families" },
 ];
 
 export const plans: TrekPlan[] = [
+  {
+    id: "poonhill-budget", title: "Poon Hill Budget Plan", badge: "Cheapest", budgetType: "low", days: 3,
+    group: ["solo", "friends"], mode: "cheapest", cost: "Rs 5,200",
+    transport: "Night Bus + Jeep + Trek", stay: "Budget lodge (bed+dinner+breakfast)",
+    warning: "10-hour trek on Day 2. Carry snacks & water.",
+    itinerary: [
+      { day: 1, title: "Kathmandu → Pokhara", details: "Night bus (Rs 1,000) + Veg dinner on the way (Rs 250)" },
+      { day: 2, title: "Pokhara → Birethanti → Ghorepani", details: "Black tea (Rs 60) • Jeep to Birethanti (Rs 500) • Breakfast: egg, bread, potato, tea (Rs 150) • Half veg chowmein (Rs 125) • Trek to Upper Ghorepani (~10 hrs) • Hotel: bed+dinner+breakfast (Rs 1,200)" },
+      { day: 3, title: "Poon Hill → Tikhedhunga → Pokhara → Kathmandu", details: "Poon Hill sunrise trek (4:45 AM) • Breakfast (Rs 215) • Return trek to Tikhedhunga (~4 hrs) • Veg chowmein (Rs 50) • Bus to Pokhara (Rs 500) • Chicken momo (Rs 150) • Night bus to Kathmandu (Rs 1,000)" },
+    ],
+  },
   {
     id: "budget", title: "Budget Plan", badge: "Cheapest", budgetType: "low", days: 5,
     group: ["solo", "friends"], mode: "cheapest", cost: "Rs 12,000–16,000",
@@ -157,6 +202,19 @@ export const plans: TrekPlan[] = [
 ];
 
 export const trekRoutes: TrekRoute[] = [
+  {
+    id: "poonhill", name: "Poon Hill Trek", region: "Annapurna", difficulty: "Easy-Moderate",
+    duration: "3 days", maxAlt: "3,210m", bestSeason: "Oct–Apr",
+    weather: { temp: "0°C to 18°C", condition: "Clear mornings, possible afternoon clouds" },
+    description: "The most popular short trek in Nepal. Stunning sunrise views of Dhaulagiri and Annapurna ranges from Poon Hill viewpoint at 3,210m.",
+    stops: [
+      { name: "Pokhara", day: 1, alt: "827m", type: "Gateway", facilities: ["Bus Park", "Hotels", "ATM", "Hospital"] },
+      { name: "Birethanti", day: 2, alt: "1,025m", type: "Checkpoint", facilities: ["TIMS Check", "Lodge", "Shops"] },
+      { name: "Tikhedhunga", day: 2, alt: "1,540m", type: "Rest Stop", facilities: ["Lodge", "Tea Shop"] },
+      { name: "Ghorepani", day: 2, alt: "2,860m", type: "Village", facilities: ["Lodge", "Restaurant", "Hot Water"] },
+      { name: "Poon Hill", day: 3, alt: "3,210m", type: "Viewpoint", facilities: ["Viewing Tower", "Tea Shop"] },
+    ],
+  },
   {
     id: "everest", name: "Everest Base Camp", region: "Solukhumbu", difficulty: "Hard",
     duration: "14 days", maxAlt: "5,364m", bestSeason: "Mar–May, Sep–Nov",
