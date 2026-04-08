@@ -99,6 +99,16 @@ export const hotels: Hotel[] = [
   // Kagbeni
   { id: "h1g", name: "Kagbeni Heritage House", area: "Kagbeni", price: "Rs 2,500/night", tag: "Heritage", phone: "+977-69-440321", rating: 4.4, amenities: ["Rooftop", "Hot Water", "WiFi"] },
   { id: "h2g", name: "Red House Lodge", area: "Kagbeni", price: "Rs 1,600/night", tag: "Budget", phone: "+977-69-440322", rating: 4.2, amenities: ["Hot Water", "Restaurant"] },
+  // Birethanti
+  { id: "h1b", name: "Birethanti Guest House", area: "Birethanti", price: "Rs 800/night", tag: "Budget", phone: "+977-69-550101", rating: 4.0, amenities: ["Hot Water", "Garden"] },
+  { id: "h2b", name: "Riverside Lodge Birethanti", area: "Birethanti", price: "Rs 1,200/night", tag: "Comfort", phone: "+977-69-550102", rating: 4.3, amenities: ["Restaurant", "Hot Water", "WiFi"] },
+  // Ghorepani / Upper Ghorepani
+  { id: "h1gh", name: "Poon Hill Guest House", area: "Ghorepani", price: "Rs 1,200/night", tag: "Trekker", phone: "+977-69-550201", rating: 4.4, amenities: ["Hot Water", "Restaurant", "Mountain View"] },
+  { id: "h2gh", name: "Sunrise Lodge Ghorepani", area: "Ghorepani", price: "Rs 1,000/night", tag: "Budget", phone: "+977-69-550202", rating: 4.2, amenities: ["Hot Water", "Dining Hall"] },
+  { id: "h3gh", name: "Fishtail View Lodge", area: "Ghorepani", price: "Rs 1,500/night", tag: "Scenic", phone: "+977-69-550203", rating: 4.6, amenities: ["Mountain View", "Restaurant", "Hot Water"] },
+  // Tikhedhunga
+  { id: "h1t", name: "Tikhedhunga Rest House", area: "Tikhedhunga", price: "Rs 600/night", tag: "Basic", phone: "+977-69-550301", rating: 3.8, amenities: ["Hot Water"] },
+  { id: "h2t", name: "Waterfall Lodge", area: "Tikhedhunga", price: "Rs 900/night", tag: "Budget", phone: "+977-69-550302", rating: 4.1, amenities: ["Hot Water", "Restaurant"] },
 ];
 
 export const cafes: Cafe[] = [
@@ -123,6 +133,15 @@ export const cafes: Cafe[] = [
   // Kagbeni
   { id: "c1g", name: "Kagbeni Coffee House", area: "Kagbeni", price: "Rs 200–500", specialty: "Espresso & Pancakes", rating: 4.6, openHours: "7 AM – 8 PM" },
   { id: "c2g", name: "Yak Herder's Cafe", area: "Kagbeni", price: "Rs 150–350", specialty: "Yak Cheese & Tea", rating: 4.3, openHours: "6 AM – 7 PM" },
+  // Birethanti
+  { id: "c1b", name: "Riverside Snack Bar", area: "Birethanti", price: "Rs 100–300", specialty: "Egg Bread & Tea", rating: 4.2, openHours: "5:30 AM – 8 PM" },
+  { id: "c2b", name: "Trail Start Cafe", area: "Birethanti", price: "Rs 150–400", specialty: "Chowmein & Momo", rating: 4.0, openHours: "6 AM – 7 PM" },
+  // Ghorepani
+  { id: "c1gh", name: "Sunrise View Cafe", area: "Ghorepani", price: "Rs 150–350", specialty: "Thukpa & Tea", rating: 4.4, openHours: "5 AM – 8 PM" },
+  { id: "c2gh", name: "Mountain Kitchen", area: "Ghorepani", price: "Rs 200–500", specialty: "Dal Bhat & Pancakes", rating: 4.3, openHours: "6 AM – 9 PM" },
+  // Tikhedhunga
+  { id: "c1t", name: "Tikhe Roadside Eatery", area: "Tikhedhunga", price: "Rs 50–200", specialty: "Veg Chowmein & Tea", rating: 4.0, openHours: "6 AM – 6 PM" },
+  { id: "c2t", name: "Hilltop Snack Point", area: "Tikhedhunga", price: "Rs 100–250", specialty: "Noodles & Juice", rating: 3.9, openHours: "7 AM – 5 PM" },
 ];
 
 export const packs: TrekPackage[] = [
