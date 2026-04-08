@@ -21,6 +21,20 @@ export const reelGradients = [
 
 export const reels: Reel[] = [
   {
+    id: "r0", title: "Poon Hill Trek under Rs 5200", subtitle: "Cheapest budget trek guide",
+    place: "Poon Hill", duration: "3 days", budget: "Rs 5,200", season: "Oct–Apr",
+    transport: "Bus + Jeep + Trek", type: "Budget", creator: "giggrow",
+    handle: "@giggrow", description: "Budget-friendly Poon Hill trek under Rs 5200 including transport, food, and stay. Complete 3-day itinerary from Kathmandu with exact costs.",
+    rating: 4.9, trips: 56, followers: "45.2K", bio: "Nepal travel hacks & budget trek guides. Proving you don't need money to see the mountains.",
+    reviews: [
+      { user: "Rohan K.", text: "Did this exact trip. Actually came under 5200!", rating: 5 },
+      { user: "Sneha P.", text: "Best budget guide for Poon Hill. Super detailed.", rating: 5 },
+    ],
+    socials: { instagram: "@giggrow", youtube: "giggrow" },
+    image: poonhillImg,
+    video: "/reels/poonhill-budget.mp4",
+  },
+  {
     id: "r1", title: "Jeep Journey to Jomsom", subtitle: "Rough roads, mountain views",
     place: "Jomsom", duration: "5 days", budget: "Rs 12,000–18,000", season: "Oct–Nov",
     transport: "Bus + Shared Jeep", type: "Adventure", creator: "Mustang Motion",
