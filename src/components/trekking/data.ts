@@ -62,19 +62,53 @@ export const reels: Reel[] = [
 ];
 
 export const hotels: Hotel[] = [
-  { id: "h1", name: "Jomsom Eco Lodge", area: "Jomsom", price: "Rs 2,000/night", tag: "Budget", phone: "+977-69-440123", rating: 4.3, amenities: ["WiFi", "Hot Water", "Restaurant"] },
-  { id: "h2", name: "Marpha Apple Stay", area: "Marpha", price: "Rs 3,500/night", tag: "Scenic", phone: "+977-69-440456", rating: 4.6, amenities: ["Garden", "Hot Water", "Mountain View"] },
-  { id: "h3", name: "Muktinath Family Inn", area: "Muktinath", price: "Rs 4,000/night", tag: "Family", phone: "+977-69-440789", rating: 4.5, amenities: ["Heater", "Restaurant", "Parking"] },
-  { id: "h4", name: "Kagbeni Heritage House", area: "Kagbeni", price: "Rs 2,500/night", tag: "Heritage", phone: "+977-69-440321", rating: 4.4, amenities: ["Rooftop", "Hot Water", "WiFi"] },
-  { id: "h5", name: "Pokhara Lakeside Inn", area: "Pokhara", price: "Rs 3,000/night", tag: "Comfort", phone: "+977-61-462555", rating: 4.7, amenities: ["Lake View", "WiFi", "AC", "Restaurant"] },
+  // Kathmandu
+  { id: "h1k", name: "Thamel Backpacker Inn", area: "Kathmandu", price: "Rs 1,200/night", tag: "Budget", phone: "+977-1-4700111", rating: 4.1, amenities: ["WiFi", "Hot Water", "Laundry"] },
+  { id: "h2k", name: "Hotel Manang", area: "Kathmandu", price: "Rs 3,500/night", tag: "Comfort", phone: "+977-1-4700222", rating: 4.5, amenities: ["WiFi", "AC", "Restaurant", "Rooftop"] },
+  { id: "h3k", name: "Kathmandu Guest House", area: "Kathmandu", price: "Rs 4,500/night", tag: "Heritage", phone: "+977-1-4700333", rating: 4.7, amenities: ["Garden", "WiFi", "Pool", "Spa"] },
+  // Pokhara
+  { id: "h1p", name: "Pokhara Lakeside Inn", area: "Pokhara", price: "Rs 3,000/night", tag: "Comfort", phone: "+977-61-462555", rating: 4.7, amenities: ["Lake View", "WiFi", "AC", "Restaurant"] },
+  { id: "h2p", name: "Hotel Middle Path", area: "Pokhara", price: "Rs 1,800/night", tag: "Budget", phone: "+977-61-462666", rating: 4.3, amenities: ["WiFi", "Hot Water", "Garden"] },
+  { id: "h3p", name: "Fish Tail Lodge", area: "Pokhara", price: "Rs 8,000/night", tag: "Premium", phone: "+977-61-462777", rating: 4.9, amenities: ["Lake View", "Spa", "Restaurant", "Bar"] },
+  // Jomsom
+  { id: "h1j", name: "Jomsom Eco Lodge", area: "Jomsom", price: "Rs 2,000/night", tag: "Budget", phone: "+977-69-440123", rating: 4.3, amenities: ["WiFi", "Hot Water", "Restaurant"] },
+  { id: "h2j", name: "Om's Home", area: "Jomsom", price: "Rs 2,800/night", tag: "Cozy", phone: "+977-69-440124", rating: 4.5, amenities: ["Hot Water", "Garden", "Mountain View"] },
+  { id: "h3j", name: "Jomsom Mountain Resort", area: "Jomsom", price: "Rs 5,500/night", tag: "Premium", phone: "+977-69-440125", rating: 4.8, amenities: ["Heater", "Restaurant", "Bar", "WiFi"] },
+  // Muktinath
+  { id: "h1m", name: "Muktinath Family Inn", area: "Muktinath", price: "Rs 4,000/night", tag: "Family", phone: "+977-69-440789", rating: 4.5, amenities: ["Heater", "Restaurant", "Parking"] },
+  { id: "h2m", name: "Hotel North Pole", area: "Muktinath", price: "Rs 2,200/night", tag: "Budget", phone: "+977-69-440790", rating: 4.2, amenities: ["Hot Water", "Restaurant"] },
+  { id: "h3m", name: "Bob Marley Guest House", area: "Muktinath", price: "Rs 1,500/night", tag: "Backpacker", phone: "+977-69-440791", rating: 4.0, amenities: ["Hot Water", "Common Room"] },
+  // Marpha
+  { id: "h1a", name: "Marpha Apple Stay", area: "Marpha", price: "Rs 3,500/night", tag: "Scenic", phone: "+977-69-440456", rating: 4.6, amenities: ["Garden", "Hot Water", "Mountain View"] },
+  { id: "h2a", name: "Paradise Guest House", area: "Marpha", price: "Rs 2,000/night", tag: "Budget", phone: "+977-69-440457", rating: 4.3, amenities: ["Hot Water", "Restaurant"] },
+  { id: "h3a", name: "Marpha Lodge", area: "Marpha", price: "Rs 1,800/night", tag: "Basic", phone: "+977-69-440458", rating: 4.1, amenities: ["Hot Water", "Dining Hall"] },
+  // Kagbeni
+  { id: "h1g", name: "Kagbeni Heritage House", area: "Kagbeni", price: "Rs 2,500/night", tag: "Heritage", phone: "+977-69-440321", rating: 4.4, amenities: ["Rooftop", "Hot Water", "WiFi"] },
+  { id: "h2g", name: "Red House Lodge", area: "Kagbeni", price: "Rs 1,600/night", tag: "Budget", phone: "+977-69-440322", rating: 4.2, amenities: ["Hot Water", "Restaurant"] },
 ];
 
 export const cafes: Cafe[] = [
-  { id: "c1", name: "Apple Pie Corner", area: "Marpha", price: "Rs 300–700", specialty: "Apple Pie & Cider", rating: 4.8, openHours: "7 AM – 8 PM" },
-  { id: "c2", name: "Thakali Meal Stop", area: "Jomsom", price: "Rs 400–900", specialty: "Thakali Dal Bhat Set", rating: 4.5, openHours: "6 AM – 9 PM" },
-  { id: "c3", name: "Temple Tea Point", area: "Muktinath", price: "Rs 150–350", specialty: "Butter Tea & Momos", rating: 4.3, openHours: "6 AM – 7 PM" },
-  { id: "c4", name: "Kagbeni Coffee House", area: "Kagbeni", price: "Rs 200–500", specialty: "Espresso & Pancakes", rating: 4.6, openHours: "7 AM – 8 PM" },
-  { id: "c5", name: "Lakeside Brew", area: "Pokhara", price: "Rs 250–600", specialty: "Craft Coffee & Pastries", rating: 4.7, openHours: "6:30 AM – 9 PM" },
+  // Kathmandu
+  { id: "c1k", name: "Himalayan Java", area: "Kathmandu", price: "Rs 300–800", specialty: "Espresso & Sandwiches", rating: 4.6, openHours: "7 AM – 9 PM" },
+  { id: "c2k", name: "OR2K Restaurant", area: "Kathmandu", price: "Rs 400–1,000", specialty: "Mediterranean & Hookah", rating: 4.5, openHours: "11 AM – 10 PM" },
+  { id: "c3k", name: "Garden of Dreams Cafe", area: "Kathmandu", price: "Rs 350–900", specialty: "Pastries & Tea", rating: 4.7, openHours: "8 AM – 8 PM" },
+  // Pokhara
+  { id: "c1p", name: "Lakeside Brew", area: "Pokhara", price: "Rs 250–600", specialty: "Craft Coffee & Pastries", rating: 4.7, openHours: "6:30 AM – 9 PM" },
+  { id: "c2p", name: "Busy Bee Cafe", area: "Pokhara", price: "Rs 200–500", specialty: "Pancakes & Smoothies", rating: 4.4, openHours: "7 AM – 8 PM" },
+  { id: "c3p", name: "French Creperie", area: "Pokhara", price: "Rs 350–800", specialty: "Crepes & Coffee", rating: 4.6, openHours: "8 AM – 9 PM" },
+  // Jomsom
+  { id: "c1j", name: "Thakali Meal Stop", area: "Jomsom", price: "Rs 400–900", specialty: "Thakali Dal Bhat Set", rating: 4.5, openHours: "6 AM – 9 PM" },
+  { id: "c2j", name: "Jomsom Bakery", area: "Jomsom", price: "Rs 150–400", specialty: "Fresh Bread & Tea", rating: 4.3, openHours: "6 AM – 7 PM" },
+  // Muktinath
+  { id: "c1m", name: "Temple Tea Point", area: "Muktinath", price: "Rs 150–350", specialty: "Butter Tea & Momos", rating: 4.3, openHours: "6 AM – 7 PM" },
+  { id: "c2m", name: "Pilgrim's Rest Cafe", area: "Muktinath", price: "Rs 200–500", specialty: "Dal Bhat & Thukpa", rating: 4.1, openHours: "6 AM – 8 PM" },
+  // Marpha
+  { id: "c1a", name: "Apple Pie Corner", area: "Marpha", price: "Rs 300–700", specialty: "Apple Pie & Cider", rating: 4.8, openHours: "7 AM – 8 PM" },
+  { id: "c2a", name: "Marpha Distillery Cafe", area: "Marpha", price: "Rs 200–600", specialty: "Apple Brandy & Snacks", rating: 4.5, openHours: "9 AM – 7 PM" },
+  { id: "c3a", name: "Village Garden Cafe", area: "Marpha", price: "Rs 150–400", specialty: "Local Tea & Bread", rating: 4.2, openHours: "6 AM – 6 PM" },
+  // Kagbeni
+  { id: "c1g", name: "Kagbeni Coffee House", area: "Kagbeni", price: "Rs 200–500", specialty: "Espresso & Pancakes", rating: 4.6, openHours: "7 AM – 8 PM" },
+  { id: "c2g", name: "Yak Herder's Cafe", area: "Kagbeni", price: "Rs 150–350", specialty: "Yak Cheese & Tea", rating: 4.3, openHours: "6 AM – 7 PM" },
 ];
 
 export const packs: TrekPackage[] = [
