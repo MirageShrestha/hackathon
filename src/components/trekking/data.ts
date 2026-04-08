@@ -203,6 +203,19 @@ export const plans: TrekPlan[] = [
 
 export const trekRoutes: TrekRoute[] = [
   {
+    id: "poonhill", name: "Poon Hill Trek", region: "Annapurna", difficulty: "Easy-Moderate",
+    duration: "3 days", maxAlt: "3,210m", bestSeason: "Oct–Apr",
+    weather: { temp: "0°C to 18°C", condition: "Clear mornings, possible afternoon clouds" },
+    description: "The most popular short trek in Nepal. Stunning sunrise views of Dhaulagiri and Annapurna ranges from Poon Hill viewpoint at 3,210m.",
+    stops: [
+      { name: "Pokhara", day: 1, alt: "827m", type: "Gateway", facilities: ["Bus Park", "Hotels", "ATM", "Hospital"] },
+      { name: "Birethanti", day: 2, alt: "1,025m", type: "Checkpoint", facilities: ["TIMS Check", "Lodge", "Shops"] },
+      { name: "Tikhedhunga", day: 2, alt: "1,540m", type: "Rest Stop", facilities: ["Lodge", "Tea Shop"] },
+      { name: "Ghorepani", day: 2, alt: "2,860m", type: "Village", facilities: ["Lodge", "Restaurant", "Hot Water"] },
+      { name: "Poon Hill", day: 3, alt: "3,210m", type: "Viewpoint", facilities: ["Viewing Tower", "Tea Shop"] },
+    ],
+  },
+  {
     id: "everest", name: "Everest Base Camp", region: "Solukhumbu", difficulty: "Hard",
     duration: "14 days", maxAlt: "5,364m", bestSeason: "Mar–May, Sep–Nov",
     weather: { temp: "-6°C to 10°C", condition: "Clear skies, cold nights" },
