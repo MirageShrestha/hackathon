@@ -510,6 +510,16 @@ export default function TrueNepalMustangMVP() {
                             const isAddingHotel = addingType?.day === day.day && addingType.type === "hotel";
                             const isAddingCafe = addingType?.day === day.day && addingType.type === "cafe";
 
+                            // Extract destination from day title (e.g. "Kathmandu → Pokhara" → "Pokhara", "Muktinath visit" → "Muktinath")
+                            const titleLower = day.title.toLowerCase();
+                            const destination = day.title.includes("→")
+                              ? day.title.split("→").pop()!.trim()
+                              : day.title.split(" ")[0];
+                            const destLower = destination.toLowerCase();
+
+                            const filteredHotels = hotels.filter(h => h.area.toLowerCase() === destLower);
+                            const filteredCafes = cafes.filter(c => c.area.toLowerCase() === destLower);
+
                             return (
                               <div key={day.day} className="rounded-2xl border border-border bg-card overflow-hidden transition-all">
                                 {/* Day header */}
@@ -588,7 +598,7 @@ export default function TrueNepalMustangMVP() {
                                         )}
                                         {isAddingHotel && (
                                           <div className="space-y-2 max-h-48 overflow-y-auto">
-                                            {hotels.map((h) => (
+                                            {filteredHotels.length > 0 ? filteredHotels.map((h) => (
                                               <button
                                                 key={h.id}
                                                 onClick={() => {
@@ -609,7 +619,9 @@ export default function TrueNepalMustangMVP() {
                                                   <span>{h.rating}</span>
                                                 </div>
                                               </button>
-                                            ))}
+                                            )) : (
+                                              <p className="text-xs text-muted-foreground/60 italic py-2">No hotels available in {destination}</p>
+                                            )}
                                           </div>
                                         )}
                                         {!hotel && !isAddingHotel && (
@@ -653,7 +665,7 @@ export default function TrueNepalMustangMVP() {
                                         )}
                                         {isAddingCafe && (
                                           <div className="space-y-2 max-h-48 overflow-y-auto">
-                                            {cafes.map((c) => (
+                                            {filteredCafes.length > 0 ? filteredCafes.map((c) => (
                                               <button
                                                 key={c.id}
                                                 onClick={() => {
@@ -675,7 +687,9 @@ export default function TrueNepalMustangMVP() {
                                                   <span>{c.rating}</span>
                                                 </div>
                                               </button>
-                                            ))}
+                                            )) : (
+                                              <p className="text-xs text-muted-foreground/60 italic py-2">No cafes available in {destination}</p>
+                                            )}
                                           </div>
                                         )}
                                         {!cafe && !isAddingCafe && (
