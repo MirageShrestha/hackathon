@@ -37,7 +37,8 @@ export const ReelCard = ({ reel, gradient, isSaved, onSave, onPlan, onProfile, i
 
   return (
     <motion.div
-      className="relative flex-shrink-0 w-full h-[580px] rounded-3xl overflow-hidden cursor-pointer group"
+      className="relative flex-shrink-0 w-full rounded-3xl overflow-hidden cursor-pointer group"
+      style={{ aspectRatio: "9/16" }}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4 }}
