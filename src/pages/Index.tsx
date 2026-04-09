@@ -247,11 +247,11 @@ export default function TrueNepalMustangMVP() {
                 </div>
                 <div
                   ref={reelContainerRef}
-                  className="h-[600px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
+                  className="h-[75vh] max-h-[700px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
                   style={{ scrollSnapType: "y mandatory" }}
                 >
                   {filteredReels.map((reel, i) => (
-                    <div key={reel.id} className="snap-start h-[580px] mb-4" style={{ scrollSnapAlign: "start" }}>
+                    <div key={reel.id} className="snap-start mb-4" style={{ scrollSnapAlign: "start", aspectRatio: "9/16", maxHeight: "calc(75vh - 16px)" }}>
                       <ReelCard
                         reel={reel}
                         gradient={reelGradients[i % reelGradients.length]}
