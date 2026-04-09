@@ -47,6 +47,7 @@ export const reels: Reel[] = [
     ],
     socials: { instagram: "@mustangmotion", youtube: "MustangMotion" },
     image: mustangImg,
+    map: "/maps/jomsom-map.jpg",
   },
   {
     id: "r2", title: "Muktinath Escape", subtitle: "Temple and scenic route",
