@@ -469,12 +469,11 @@ export default function TrueNepalMustangMVP() {
                             <Badge variant="outline" className="text-[10px] gap-1"><Users className="w-3 h-3" />{plan.group.join(", ")}</Badge>
                             <Badge variant="outline" className="text-[10px] gap-1 text-amber-600 border-amber-200 bg-amber-50"><ShieldAlert className="w-3 h-3" />{plan.warning}</Badge>
                           </div>
-                          <div className="space-y-2 mb-4">
-                            {plan.itinerary.slice(0, 3).map((day) => (
+                          <div className="space-y-1.5 mb-4">
+                            {plan.itinerary.map((day) => (
                               <div key={day.day} className="flex items-center gap-3 text-xs">
-                                <span className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{day.day}</span>
+                                <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{day.day}</span>
                                 <span className="font-medium text-foreground">{day.title}</span>
-                                <span className="text-muted-foreground">— {day.details}</span>
                               </div>
                             ))}
                           </div>
