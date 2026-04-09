@@ -19,6 +19,7 @@ export interface Reel {
   socials: { instagram: string; youtube: string };
   image?: string;
   video?: string;
+  map?: string;
 }
 
 export interface Hotel {
