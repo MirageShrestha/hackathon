@@ -235,101 +235,128 @@ export default function TrueNepalMustangMVP() {
         <AnimatePresence mode="wait">
           {/* REELS */}
           {page === "reels" && (
-            <motion.div key="reels" {...pageVariants} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-7 xl:col-span-8">
-                <div className="mb-4">
-                  <Input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search by place, type..."
-                    className="h-11 rounded-xl bg-card border-border"
-                  />
-                </div>
-                <div
-                  ref={reelContainerRef}
-                  className="h-[75vh] max-h-[700px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
-                  style={{ scrollSnapType: "y mandatory" }}
-                >
-                  {filteredReels.map((reel, i) => (
-                    <div key={reel.id} className="snap-start mb-4" style={{ scrollSnapAlign: "start", aspectRatio: "9/16", maxHeight: "calc(75vh - 16px)" }}>
-                      <ReelCard
-                        reel={reel}
-                        gradient={reelGradients[i % reelGradients.length]}
-                        isSaved={isSaved(reel.id)}
-                        onSave={() => toggleWishlist({ ...reel, category: "Reel" })}
-                        onPlan={() => setPage("planner")}
-                        onProfile={() => { setProfileReel(reel); setPage("profile"); }}
-                        isActive={activeReel === reel.id}
-                      />
-                    </div>
-                  ))}
-                </div>
+            <motion.div key="reels" {...pageVariants}>
+              <div className="mb-4">
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search by place, type..."
+                  className="h-11 rounded-xl bg-card border-border"
+                />
               </div>
-
-              {/* Detail panel */}
-              <div className="lg:col-span-5 xl:col-span-4 space-y-4">
-                <Card className="border-border shadow-none">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Reel Details</CardTitle>
-                      <Badge variant="secondary" className="text-xs rounded-full">{selectedReel.type}</Badge>
-                    </div>
-                    <CardDescription>Travel context & creator info</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-5">
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { icon: MapPin, text: selectedReel.place },
-                        { icon: Clock3, text: selectedReel.duration },
-                        { icon: Car, text: selectedReel.transport },
-                        { icon: Star, text: String(selectedReel.rating), color: "text-amber-500" },
-                      ].map(({ icon: Icon, text, color }) => (
-                        <Badge key={text} variant="outline" className="gap-1 text-xs">
-                          <Icon className={`w-3 h-3 ${color || ""}`} />{text}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                      <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <span className="font-bold text-primary">{selectedReel.creator[0]}</span>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                {/* Reel - takes 5 cols on desktop */}
+                <div className="lg:col-span-5">
+                  <div
+                    ref={reelContainerRef}
+                    className="h-[80vh] max-h-[780px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
+                    style={{ scrollSnapType: "y mandatory" }}
+                  >
+                    {filteredReels.map((reel, i) => (
+                      <div key={reel.id} className="snap-start mb-4" style={{ scrollSnapAlign: "start", aspectRatio: "9/16", maxHeight: "calc(80vh - 16px)" }}>
+                        <ReelCard
+                          reel={reel}
+                          gradient={reelGradients[i % reelGradients.length]}
+                          isSaved={isSaved(reel.id)}
+                          onSave={() => toggleWishlist({ ...reel, category: "Reel" })}
+                          onPlan={() => setPage("planner")}
+                          onProfile={() => { setProfileReel(reel); setPage("profile"); }}
+                          isActive={activeReel === reel.id}
+                        />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-sm text-foreground">{selectedReel.creator}</span>
-                          <BadgeCheck className="w-3.5 h-3.5 text-blue-500" />
-                        </div>
-                        <span className="text-xs text-muted-foreground">{selectedReel.handle}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Detail + Map panel - takes 7 cols */}
+                <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Trek Map */}
+                  <div className="rounded-2xl overflow-hidden border border-border bg-card">
+                    {selectedReel.map ? (
+                      <img
+                        src={selectedReel.map}
+                        alt={`${selectedReel.place} trek map`}
+                        className="w-full h-full object-cover"
+                        style={{ minHeight: "280px", maxHeight: "400px" }}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full flex flex-col items-center justify-center gap-3 bg-secondary/30 p-8" style={{ minHeight: "280px" }}>
+                        <Compass className="w-10 h-10 text-muted-foreground/40" />
+                        <p className="text-sm text-muted-foreground">Map coming soon</p>
+                        <p className="text-xs text-muted-foreground/60">{selectedReel.place}</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-xs" onClick={() => { setProfileReel(selectedReel); setPage("profile"); }}>
-                        View <ChevronRight className="w-3 h-3 ml-1" />
-                      </Button>
+                    )}
+                    <div className="p-3 border-t border-border">
+                      <div className="flex items-center gap-2">
+                        <Map className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-medium text-foreground">{selectedReel.place} Route Map</span>
+                      </div>
                     </div>
+                  </div>
 
-                    <p className="text-sm text-muted-foreground leading-relaxed">{selectedReel.description}</p>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { label: "Budget", value: selectedReel.budget },
-                        { label: "Best Season", value: selectedReel.season },
-                      ].map(({ label, value }) => (
-                        <div key={label} className="p-3 rounded-xl bg-secondary/50">
-                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</p>
-                          <p className="text-sm font-semibold text-foreground">{value}</p>
+                  {/* Reel Details */}
+                  <div className="space-y-4">
+                    <Card className="border-border shadow-none">
+                      <CardContent className="pt-5 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-bold text-foreground">{selectedReel.title}</h3>
+                          <Badge variant="secondary" className="text-[10px] rounded-full">{selectedReel.type}</Badge>
                         </div>
-                      ))}
-                    </div>
 
-                    <div className="flex gap-2">
-                      <Button className="flex-1 rounded-xl h-11" onClick={() => setPage("planner")}>
-                        <Route className="w-4 h-4 mr-2" /> Plan This Trip
-                      </Button>
-                      <Button variant="outline" className="rounded-xl h-11" onClick={() => toggleWishlist({ ...selectedReel, category: "Reel" })}>
-                        <Heart className={`w-4 h-4 ${isSaved(selectedReel.id) ? "fill-red-500 text-red-500" : ""}`} />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { icon: MapPin, text: selectedReel.place },
+                            { icon: Clock3, text: selectedReel.duration },
+                            { icon: Car, text: selectedReel.transport },
+                            { icon: Star, text: String(selectedReel.rating), color: "text-amber-500" },
+                          ].map(({ icon: Icon, text, color }) => (
+                            <Badge key={text} variant="outline" className="gap-1 text-[10px] py-0.5">
+                              <Icon className={`w-3 h-3 ${color || ""}`} />{text}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        <button onClick={() => { setProfileReel(selectedReel); setPage("profile"); }} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/50 w-full hover:bg-secondary/80 transition-colors">
+                          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="font-bold text-sm text-primary">{selectedReel.creator[0]}</span>
+                          </div>
+                          <div className="flex-1 min-w-0 text-left">
+                            <div className="flex items-center gap-1">
+                              <span className="font-semibold text-xs text-foreground">{selectedReel.creator}</span>
+                              <BadgeCheck className="w-3 h-3 text-blue-500" />
+                            </div>
+                            <span className="text-[10px] text-muted-foreground">{selectedReel.handle}</span>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        </button>
+
+                        <p className="text-xs text-muted-foreground leading-relaxed">{selectedReel.description}</p>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { label: "Budget", value: selectedReel.budget },
+                            { label: "Best Season", value: selectedReel.season },
+                          ].map(({ label, value }) => (
+                            <div key={label} className="p-2.5 rounded-xl bg-secondary/50">
+                              <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">{label}</p>
+                              <p className="text-sm font-semibold text-foreground">{value}</p>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button className="flex-1 rounded-xl h-10 text-sm" onClick={() => setPage("planner")}>
+                            <Route className="w-4 h-4 mr-2" /> Plan This Trip
+                          </Button>
+                          <Button variant="outline" className="rounded-xl h-10" onClick={() => toggleWishlist({ ...selectedReel, category: "Reel" })}>
+                            <Heart className={`w-4 h-4 ${isSaved(selectedReel.id) ? "fill-red-500 text-red-500" : ""}`} />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
