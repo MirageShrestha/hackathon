@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { TabKey, TrekRoute, Guide, Porter, WishlistItem, TrekPlan, Hotel, Cafe } from "@/components/trekking/types";
+import type { TabKey, TrekRoute, Guide, Porter, WishlistItem, TrekPlan, Hotel, Cafe, ItineraryItem } from "@/components/trekking/types";
 import { reels, reelGradients, hotels, cafes, packs, plans, trekRoutes } from "@/components/trekking/data";
 import { ReelCard } from "@/components/trekking/ReelCard";
 import { ProfileSection } from "@/components/trekking/ProfileSection";
