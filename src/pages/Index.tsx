@@ -4,8 +4,8 @@ import {
   Heart, CalendarDays, Coffee, Package, Info, Play, Mountain,
   Route, Clock3, Users, ShieldAlert, BookmarkPlus, X, MapPin, Star,
   BadgeCheck, ChevronRight, Car, Map, Ticket, LayoutDashboard, Shield,
-  Compass, Phone, Wifi, ChevronDown, ChevronUp,
-  Hotel as HotelIcon,
+  Compass, Phone, Wifi, ChevronDown, ChevronUp, UtensilsCrossed,
+  Hotel as HotelIcon, Bus, Footprints, Eye,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { TabKey, TrekRoute, Guide, Porter, WishlistItem, TrekPlan, Hotel, Cafe } from "@/components/trekking/types";
+import type { TabKey, TrekRoute, Guide, Porter, WishlistItem, TrekPlan, Hotel, Cafe, ItineraryItem } from "@/components/trekking/types";
 import { reels, reelGradients, hotels, cafes, packs, plans, trekRoutes } from "@/components/trekking/data";
 import { ReelCard } from "@/components/trekking/ReelCard";
 import { ProfileSection } from "@/components/trekking/ProfileSection";
@@ -247,11 +247,11 @@ export default function TrueNepalMustangMVP() {
                 </div>
                 <div
                   ref={reelContainerRef}
-                  className="h-[600px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
+                  className="h-[75vh] max-h-[700px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
                   style={{ scrollSnapType: "y mandatory" }}
                 >
                   {filteredReels.map((reel, i) => (
-                    <div key={reel.id} className="snap-start h-[580px] mb-4" style={{ scrollSnapAlign: "start" }}>
+                    <div key={reel.id} className="snap-start mb-4" style={{ scrollSnapAlign: "start", aspectRatio: "9/16", maxHeight: "calc(75vh - 16px)" }}>
                       <ReelCard
                         reel={reel}
                         gradient={reelGradients[i % reelGradients.length]}
@@ -469,12 +469,11 @@ export default function TrueNepalMustangMVP() {
                             <Badge variant="outline" className="text-[10px] gap-1"><Users className="w-3 h-3" />{plan.group.join(", ")}</Badge>
                             <Badge variant="outline" className="text-[10px] gap-1 text-amber-600 border-amber-200 bg-amber-50"><ShieldAlert className="w-3 h-3" />{plan.warning}</Badge>
                           </div>
-                          <div className="space-y-2 mb-4">
-                            {plan.itinerary.slice(0, 3).map((day) => (
+                          <div className="space-y-1.5 mb-4">
+                            {plan.itinerary.map((day) => (
                               <div key={day.day} className="flex items-center gap-3 text-xs">
-                                <span className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{day.day}</span>
+                                <span className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{day.day}</span>
                                 <span className="font-medium text-foreground">{day.title}</span>
-                                <span className="text-muted-foreground">— {day.details}</span>
                               </div>
                             ))}
                           </div>
@@ -558,6 +557,40 @@ export default function TrueNepalMustangMVP() {
                                     className="border-t border-border"
                                   >
                                     <div className="p-4 space-y-4">
+                                      {/* Structured Breakdown */}
+                                      {day.breakdown && day.breakdown.length > 0 && (
+                                        <div>
+                                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Day Breakdown</span>
+                                          <div className="space-y-1.5">
+                                            {day.breakdown.map((item, idx) => {
+                                              const iconMap: Record<string, React.ElementType> = {
+                                                bus: Bus, food: UtensilsCrossed, hotel: HotelIcon, trek: Footprints,
+                                                jeep: Car, tea: Coffee, sight: Eye,
+                                              };
+                                              const colorMap: Record<string, string> = {
+                                                bus: "text-blue-500 bg-blue-500/10", food: "text-orange-500 bg-orange-500/10",
+                                                hotel: "text-purple-500 bg-purple-500/10", trek: "text-green-500 bg-green-500/10",
+                                                jeep: "text-amber-600 bg-amber-500/10", tea: "text-emerald-500 bg-emerald-500/10",
+                                                sight: "text-pink-500 bg-pink-500/10",
+                                              };
+                                              const IconComp = iconMap[item.icon] || MapPin;
+                                              const colors = colorMap[item.icon] || "text-muted-foreground bg-secondary";
+                                              return (
+                                                <div key={idx} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
+                                                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${colors.split(" ").slice(1).join(" ")}`}>
+                                                    <IconComp className={`w-4 h-4 ${colors.split(" ")[0]}`} />
+                                                  </div>
+                                                  <span className="text-sm text-foreground flex-1">{item.label}</span>
+                                                  {item.cost && (
+                                                    <span className="text-xs font-semibold text-foreground whitespace-nowrap">{item.cost}</span>
+                                                  )}
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      )}
+
                                       {/* Assigned Hotel */}
                                       <div>
                                         <div className="flex items-center justify-between mb-2">

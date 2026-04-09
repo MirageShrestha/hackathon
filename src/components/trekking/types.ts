@@ -50,10 +50,17 @@ export interface TrekPackage {
   bestFor: string;
 }
 
+export interface ItineraryItem {
+  label: string;
+  cost?: string;
+  icon: "bus" | "food" | "hotel" | "trek" | "jeep" | "tea" | "sight";
+}
+
 export interface PlanDay {
   day: number;
   title: string;
   details: string;
+  breakdown?: ItineraryItem[];
 }
 
 export interface TrekPlan {
