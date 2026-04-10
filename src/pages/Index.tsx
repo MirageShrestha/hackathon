@@ -245,9 +245,9 @@ export default function TrueNepalMustangMVP() {
                 />
               </div>
 
-              <div className="flex flex-col lg:flex-row gap-5 items-stretch">
-                {/* Reel Player - fixed 9:16 ratio */}
-                <div className="w-full lg:w-[320px] flex-shrink-0">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
+                {/* Column 1: Reel Player - 9:16 */}
+                <div className="w-full">
                   <div
                     ref={reelContainerRef}
                     className="h-[570px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-2xl"
@@ -269,10 +269,35 @@ export default function TrueNepalMustangMVP() {
                   </div>
                 </div>
 
-                {/* Right panel: details + map stacked */}
-                <div className="flex-1 min-w-0 flex flex-col gap-4">
-                  {/* Trek Details Card */}
-                  <Card className="border-border shadow-none">
+                {/* Column 2: Trek Route Map */}
+                <div className="w-full">
+                  <div className="rounded-2xl overflow-hidden border border-border bg-card h-[570px] flex flex-col">
+                    <div className="p-3 border-b border-border flex items-center gap-2 shrink-0">
+                      <Map className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-semibold text-foreground">{selectedReel.place} Route Map</span>
+                    </div>
+                    {selectedReel.map ? (
+                      <div className="flex-1 min-h-0 flex items-center justify-center bg-secondary/20 p-2">
+                        <img
+                          src={selectedReel.map}
+                          alt={`${selectedReel.place} trek map`}
+                          className="w-full h-full object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-secondary/20">
+                        <Compass className="w-10 h-10 text-muted-foreground/40" />
+                        <p className="text-sm text-muted-foreground">Map coming soon</p>
+                        <p className="text-xs text-muted-foreground/60">{selectedReel.place}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Column 3: Trek Details */}
+                <div className="w-full">
+                  <Card className="border-border shadow-none h-[570px] overflow-y-auto">
                     <CardContent className="pt-5 space-y-3">
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-lg text-foreground">{selectedReel.title}</h3>
@@ -330,29 +355,6 @@ export default function TrueNepalMustangMVP() {
                       </div>
                     </CardContent>
                   </Card>
-
-                  {/* Trek Route Map */}
-                  <div className="rounded-2xl overflow-hidden border border-border bg-card">
-                    <div className="p-3 border-b border-border flex items-center gap-2">
-                      <Map className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-semibold text-foreground">{selectedReel.place} Route Map</span>
-                    </div>
-                    {selectedReel.map ? (
-                      <img
-                        src={selectedReel.map}
-                        alt={`${selectedReel.place} trek map`}
-                        className="w-full object-contain bg-secondary/20"
-                        style={{ maxHeight: "320px" }}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full flex flex-col items-center justify-center gap-3 bg-secondary/20 p-10" style={{ minHeight: "200px" }}>
-                        <Compass className="w-10 h-10 text-muted-foreground/40" />
-                        <p className="text-sm text-muted-foreground">Map coming soon</p>
-                        <p className="text-xs text-muted-foreground/60">{selectedReel.place}</p>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </div>
             </motion.div>
