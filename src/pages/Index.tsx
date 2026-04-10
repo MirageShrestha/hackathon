@@ -244,16 +244,17 @@ export default function TrueNepalMustangMVP() {
                   className="h-11 rounded-xl bg-card border-border"
                 />
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-                {/* Reel - takes 5 cols on desktop */}
-                <div className="lg:col-span-5">
+
+              <div className="flex flex-col lg:flex-row gap-5 items-stretch">
+                {/* Reel Player - fixed 9:16 ratio */}
+                <div className="w-full lg:w-[320px] flex-shrink-0">
                   <div
                     ref={reelContainerRef}
-                    className="h-[80vh] max-h-[780px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-3xl"
+                    className="h-[570px] overflow-y-auto snap-y snap-mandatory scrollbar-hide rounded-2xl"
                     style={{ scrollSnapType: "y mandatory" }}
                   >
                     {filteredReels.map((reel, i) => (
-                      <div key={reel.id} className="snap-start mb-4" style={{ scrollSnapAlign: "start", aspectRatio: "9/16", maxHeight: "calc(80vh - 16px)" }}>
+                      <div key={reel.id} className="snap-start h-[570px]" style={{ scrollSnapAlign: "start" }}>
                         <ReelCard
                           reel={reel}
                           gradient={reelGradients[i % reelGradients.length]}
@@ -268,93 +269,89 @@ export default function TrueNepalMustangMVP() {
                   </div>
                 </div>
 
-                {/* Detail + Map panel - takes 7 cols */}
-                <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Trek Map */}
+                {/* Right panel: details + map stacked */}
+                <div className="flex-1 min-w-0 flex flex-col gap-4">
+                  {/* Trek Details Card */}
+                  <Card className="border-border shadow-none">
+                    <CardContent className="pt-5 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-bold text-lg text-foreground">{selectedReel.title}</h3>
+                        <Badge variant="secondary" className="text-[10px] rounded-full">{selectedReel.type}</Badge>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          { icon: MapPin, text: selectedReel.place },
+                          { icon: Clock3, text: selectedReel.duration },
+                          { icon: Car, text: selectedReel.transport },
+                          { icon: Star, text: String(selectedReel.rating), color: "text-amber-500" },
+                        ].map(({ icon: Icon, text, color }) => (
+                          <Badge key={text} variant="outline" className="gap-1 text-[10px] py-0.5">
+                            <Icon className={`w-3 h-3 ${color || ""}`} />{text}
+                          </Badge>
+                        ))}
+                      </div>
+
+                      <p className="text-xs text-muted-foreground leading-relaxed">{selectedReel.description}</p>
+
+                      <button onClick={() => { setProfileReel(selectedReel); setPage("profile"); }} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/50 w-full hover:bg-secondary/80 transition-colors">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="font-bold text-sm text-primary">{selectedReel.creator[0]}</span>
+                        </div>
+                        <div className="flex-1 min-w-0 text-left">
+                          <div className="flex items-center gap-1">
+                            <span className="font-semibold text-xs text-foreground">{selectedReel.creator}</span>
+                            <BadgeCheck className="w-3 h-3 text-blue-500" />
+                          </div>
+                          <span className="text-[10px] text-muted-foreground">{selectedReel.handle}</span>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                      </button>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { label: "Budget", value: selectedReel.budget },
+                          { label: "Best Season", value: selectedReel.season },
+                        ].map(({ label, value }) => (
+                          <div key={label} className="p-2.5 rounded-xl bg-secondary/50">
+                            <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">{label}</p>
+                            <p className="text-sm font-semibold text-foreground">{value}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button className="flex-1 rounded-xl h-10 text-sm" onClick={() => setPage("planner")}>
+                          <Route className="w-4 h-4 mr-2" /> Plan This Trip
+                        </Button>
+                        <Button variant="outline" className="rounded-xl h-10" onClick={() => toggleWishlist({ ...selectedReel, category: "Reel" })}>
+                          <Heart className={`w-4 h-4 ${isSaved(selectedReel.id) ? "fill-red-500 text-red-500" : ""}`} />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Trek Route Map */}
                   <div className="rounded-2xl overflow-hidden border border-border bg-card">
+                    <div className="p-3 border-b border-border flex items-center gap-2">
+                      <Map className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-semibold text-foreground">{selectedReel.place} Route Map</span>
+                    </div>
                     {selectedReel.map ? (
                       <img
                         src={selectedReel.map}
                         alt={`${selectedReel.place} trek map`}
-                        className="w-full h-full object-cover"
-                        style={{ minHeight: "280px", maxHeight: "400px" }}
+                        className="w-full object-contain bg-secondary/20"
+                        style={{ maxHeight: "320px" }}
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full flex flex-col items-center justify-center gap-3 bg-secondary/30 p-8" style={{ minHeight: "280px" }}>
+                      <div className="w-full flex flex-col items-center justify-center gap-3 bg-secondary/20 p-10" style={{ minHeight: "200px" }}>
                         <Compass className="w-10 h-10 text-muted-foreground/40" />
                         <p className="text-sm text-muted-foreground">Map coming soon</p>
                         <p className="text-xs text-muted-foreground/60">{selectedReel.place}</p>
                       </div>
                     )}
-                    <div className="p-3 border-t border-border">
-                      <div className="flex items-center gap-2">
-                        <Map className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium text-foreground">{selectedReel.place} Route Map</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Reel Details */}
-                  <div className="space-y-4">
-                    <Card className="border-border shadow-none">
-                      <CardContent className="pt-5 space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-bold text-foreground">{selectedReel.title}</h3>
-                          <Badge variant="secondary" className="text-[10px] rounded-full">{selectedReel.type}</Badge>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5">
-                          {[
-                            { icon: MapPin, text: selectedReel.place },
-                            { icon: Clock3, text: selectedReel.duration },
-                            { icon: Car, text: selectedReel.transport },
-                            { icon: Star, text: String(selectedReel.rating), color: "text-amber-500" },
-                          ].map(({ icon: Icon, text, color }) => (
-                            <Badge key={text} variant="outline" className="gap-1 text-[10px] py-0.5">
-                              <Icon className={`w-3 h-3 ${color || ""}`} />{text}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        <button onClick={() => { setProfileReel(selectedReel); setPage("profile"); }} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/50 w-full hover:bg-secondary/80 transition-colors">
-                          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="font-bold text-sm text-primary">{selectedReel.creator[0]}</span>
-                          </div>
-                          <div className="flex-1 min-w-0 text-left">
-                            <div className="flex items-center gap-1">
-                              <span className="font-semibold text-xs text-foreground">{selectedReel.creator}</span>
-                              <BadgeCheck className="w-3 h-3 text-blue-500" />
-                            </div>
-                            <span className="text-[10px] text-muted-foreground">{selectedReel.handle}</span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                        </button>
-
-                        <p className="text-xs text-muted-foreground leading-relaxed">{selectedReel.description}</p>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          {[
-                            { label: "Budget", value: selectedReel.budget },
-                            { label: "Best Season", value: selectedReel.season },
-                          ].map(({ label, value }) => (
-                            <div key={label} className="p-2.5 rounded-xl bg-secondary/50">
-                              <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-0.5">{label}</p>
-                              <p className="text-sm font-semibold text-foreground">{value}</p>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="flex gap-2">
-                          <Button className="flex-1 rounded-xl h-10 text-sm" onClick={() => setPage("planner")}>
-                            <Route className="w-4 h-4 mr-2" /> Plan This Trip
-                          </Button>
-                          <Button variant="outline" className="rounded-xl h-10" onClick={() => toggleWishlist({ ...selectedReel, category: "Reel" })}>
-                            <Heart className={`w-4 h-4 ${isSaved(selectedReel.id) ? "fill-red-500 text-red-500" : ""}`} />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
                   </div>
                 </div>
               </div>
