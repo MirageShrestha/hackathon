@@ -33,7 +33,7 @@ export const reels: Reel[] = [
     socials: { instagram: "@giggrow", youtube: "giggrow" },
     image: poonhillImg,
     video: "/reels/poonhill-budget.mp4",
-    map: "/maps/poonhill-map.jpg",
+    map: "/maps/poonhill-map.png",
   },
   {
     id: "r1", title: "Jeep Journey to Jomsom", subtitle: "Rough roads, mountain views",
