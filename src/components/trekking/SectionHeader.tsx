@@ -14,6 +14,6 @@ export const SectionHeader = ({ title, subtitle, icon: Icon }: SectionHeaderProp
       )}
       <h2 className="text-xl font-bold text-foreground tracking-tight">{title}</h2>
     </div>
-    <p className="text-sm text-muted-foreground ml-[42px]">{subtitle}</p>
+    <p className="hidden sm:block text-sm text-muted-foreground ml-[42px]">{subtitle}</p>
   </div>
 );
