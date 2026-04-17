@@ -194,16 +194,16 @@ export default function TrueNepalApp() {
                   className="h-11 rounded-2xl"
                 />
               </div>
-              <div className="grid grid-cols-1 gap-5 xl:grid-cols-2 xl:items-start">
+              <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:items-start">
                 <div
                   ref={reelContainerRef}
-                  className="h-[min(720px,calc(100vh-20rem))] sm:h-[min(720px,calc(100vh-18rem))] snap-y snap-mandatory overflow-y-auto rounded-2xl scrollbar-hide w-full"
+                  className="h-[min(720px,calc(100vh-18rem))] snap-y snap-mandatory overflow-y-auto rounded-2xl scrollbar-hide w-full"
                   style={{ scrollSnapType: "y mandatory" }}
                 >
                   {filteredReels.map((reel, index) => (
                     <div
                       key={reel.id}
-                      className="h-full snap-start pb-4"
+                      className="h-full snap-start"
                       style={{ scrollSnapAlign: "start" }}
                     >
                       <ReelCard
@@ -222,7 +222,7 @@ export default function TrueNepalApp() {
                 </div>
 
                 {/* Detail panel — desktop only */}
-                <div className="hidden xl:block">
+                <div className="hidden xl:block h-[min(720px,calc(100vh-18rem))] w-full">
                   <ReelDetail
                     reel={selectedReel}
                     isSaved={savedReelIds.includes(selectedReel.id)}
@@ -230,6 +230,7 @@ export default function TrueNepalApp() {
                     onSave={() => toggleSavedReel(selectedReel.id)}
                     onShare={shareReel}
                     onProfile={() => openProfile(selectedReel.handle)}
+                    className="h-full"
                   />
                 </div>
 
