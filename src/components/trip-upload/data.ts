@@ -69,12 +69,12 @@ export const createSampleTrip = (): TripEntry => ({
       id: "stay-1",
       title: "Stay",
       dayLabel: "Room Cost",
-      route: "Per person for 3 nights",
-      notes: "Accommodation split per person for the full trip.",
+      route: "Hotel Mountain Top - per person for 3 nights",
+      notes: "Accommodation split per person for the full trip at Hotel Mountain Top.",
       expenses: [
-        { id: "stay-night-1", label: "Night 1", amount: 1000, category: "stay" },
-        { id: "stay-night-2", label: "Night 2", amount: 1250, category: "stay" },
-        { id: "stay-night-3", label: "Night 3", amount: 1000, category: "stay" },
+        { id: "stay-night-1", label: "Night 1 - Hotel Mountain Top", amount: 1000, category: "stay" },
+        { id: "stay-night-2", label: "Night 2 - Hotel Mountain Top", amount: 1250, category: "stay" },
+        { id: "stay-night-3", label: "Night 3 - Hotel Mountain Top", amount: 1000, category: "stay" },
       ],
     },
   ],
@@ -91,7 +91,30 @@ export const loadStoredTrips = (): TripEntry[] => {
 
   try {
     const parsed = JSON.parse(raw) as TripEntry[];
-    return parsed.length ? parsed : [createSampleTrip()];
+    const withHotelStayLabels = parsed.map((trip) => ({
+      ...trip,
+      itinerary: trip.itinerary.map((day) => {
+        if (day.id !== "stay-1") return day;
+
+        return {
+          ...day,
+          expenses: day.expenses.map((expense) => {
+            if (expense.id === "stay-night-1") {
+              return { ...expense, label: "Night 1 - Hotel Mountain Top" };
+            }
+            if (expense.id === "stay-night-2") {
+              return { ...expense, label: "Night 2 - Hotel Mountain Top" };
+            }
+            if (expense.id === "stay-night-3") {
+              return { ...expense, label: "Night 3 - Hotel Mountain Top" };
+            }
+            return expense;
+          }),
+        };
+      }),
+    }));
+
+    return withHotelStayLabels.length ? withHotelStayLabels : [createSampleTrip()];
   } catch {
     return [createSampleTrip()];
   }
