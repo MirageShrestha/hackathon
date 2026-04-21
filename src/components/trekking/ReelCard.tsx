@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, Share2, Route, MapPin, Clock3, Car, BadgeCheck, Play, Pause, Volume2, VolumeX, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,20 @@ export const ReelCard = ({ reel, gradient, isSaved, onSave, onPlan, onProfile, o
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+
+  // Auto-play when active, pause when inactive
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (isActive) {
+      videoRef.current.play().catch(() => {
+        // Autoplay may be blocked, user will click to play
+      });
+      setIsPlaying(true);
+    } else if (!videoRef.current.paused) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  }, [isActive]);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -147,48 +161,50 @@ export const ReelCard = ({ reel, gradient, isSaved, onSave, onPlan, onProfile, o
       </div>
 
       {/* Bottom content */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 pt-20 z-10">
+      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 pt-16 sm:pt-20 z-10 flex flex-col gap-2">
         <button
           onClick={(event) => {
             event.stopPropagation();
             onProfile();
           }}
-          className="flex items-center gap-3 mb-3 group/avatar"
+          className="flex items-center gap-2 sm:gap-3 group/avatar"
         >
-          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 group-hover/avatar:border-white/70 transition-all">
-            <span className="text-white font-bold text-sm">{reel.creator[0]}</span>
+          <div className="w-9 sm:w-10 h-9 sm:h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 group-hover/avatar:border-white/70 transition-all shrink-0">
+            <span className="text-white font-bold text-xs sm:text-sm">{reel.creator[0]}</span>
           </div>
-          <div className="text-left">
+          <div className="text-left min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-white font-semibold text-sm">{reel.creator}</span>
-              <BadgeCheck className="w-3.5 h-3.5 text-blue-400" />
+              <span className="text-white font-semibold text-xs sm:text-sm truncate">{reel.creator}</span>
+              <BadgeCheck className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-blue-400 shrink-0" />
             </div>
             <span className="text-white/60 text-xs">{reel.handle}</span>
           </div>
         </button>
-        <h3 className="text-white font-bold text-lg leading-tight mb-1">{reel.title}</h3>
-        <p className="text-white/70 text-sm mb-3">{reel.subtitle}</p>
-        <div className="flex flex-wrap gap-1.5">
+        <div>
+          <h3 className="text-white font-bold text-sm sm:text-lg leading-tight">{reel.title}</h3>
+          <p className="text-white/70 text-xs sm:text-sm">{reel.subtitle}</p>
+        </div>
+        <div className="flex flex-wrap gap-1">
           {[
             { icon: MapPin, text: reel.place },
             { icon: Clock3, text: reel.duration },
             { icon: Car, text: reel.transport },
           ].map(({ icon: Icon, text }) => (
-            <Badge key={text} className="bg-white/15 text-white border-0 backdrop-blur-md text-[10px] px-2 py-0.5 gap-1">
+            <Badge key={text} className="bg-white/15 text-white border-0 backdrop-blur-md text-[9px] sm:text-[10px] px-2 py-0.5 gap-1">
               <Icon className="w-3 h-3" /> {text}
             </Badge>
           ))}
         </div>
         {onShowDetails && (
-          <div className="mt-4 xl:hidden">
+          <div className="xl:hidden pt-1">
             <Button
               onClick={(event) => {
                 event.stopPropagation();
                 onShowDetails();
               }}
-              className="w-full rounded-2xl bg-white/20 text-white border border-white/20 hover:bg-white/25"
+              className="w-full rounded-2xl bg-white/20 text-white border border-white/20 hover:bg-white/25 h-9 text-sm"
             >
-              <Info className="mr-2 h-4 w-4" />
+              <Info className="mr-2 h-3.5 w-3.5" />
               Details
             </Button>
           </div>

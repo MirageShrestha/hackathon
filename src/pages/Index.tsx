@@ -34,7 +34,7 @@ const topNav: TopNavItem[] = [
   { label: "My Trek", page: "my-trek", icon: Mountain },
 ];
 
-export default function TrueNepalApp() {
+export default function SojournerApp() {
   const [page, setPage] = useState<TabKey>("reels");
   const [search, setSearch] = useState("");
   const [savedReelIds, setSavedReelIds] = useState<string[]>([]);
@@ -126,34 +126,45 @@ export default function TrueNepalApp() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-8">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8 flex-shrink-0">
         <motion.header
-          className="mb-6"
+          className="mb-0 sm:mb-0"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="flex flex-col gap-4 rounded-[2rem] border border-border bg-card/95 p-4 sm:p-5 shadow-sm backdrop-blur">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm">
-                  <Mountain className="h-5 w-5" />
+          <div className="flex flex-col gap-2 sm:gap-4 rounded-[2rem] border border-border bg-card/95 p-2.5 sm:p-5 shadow-sm backdrop-blur">
+            <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-row items-center gap-2 sm:gap-3">
+                <div className="flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm shrink-0">
+                  <Mountain className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-                <div>
-                  <h1 className="text-lg font-bold tracking-tight text-foreground">TrueNepal</h1>
-                  <p className="text-xs text-muted-foreground">Reels, trip stories, and creator-style trek journals</p>
+                <div className="flex flex-col gap-0">
+                  <h1 className="text-base sm:text-lg font-bold tracking-tight text-foreground">Sojourner</h1>
+                  <p className="hidden sm:block text-xs text-muted-foreground">Reels, trip stories, and travel experiences across Nepal</p>
                 </div>
               </div>
-              <div className="hidden sm:flex flex-wrap gap-3 text-xs text-muted-foreground sm:justify-end">
-                <span>{reels.length} reels</span>
-                <span>5 service groups</span>
-                <span>trip-based marketplace</span>
-                <span>{savedReelIds.length} saved reels</span>
+              <div className="hidden sm:flex flex-col gap-2 sm:items-end">
+                <div className="w-56">
+                  <Input
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search Pokhara, Begnas, Mustang..."
+                    className="h-9 sm:h-10 rounded-2xl text-sm"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                  <span>{reels.length} reels</span>
+                  <span>5 service groups</span>
+                  <span>trip-based marketplace</span>
+                  <span>{savedReelIds.length} saved reels</span>
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
+            {/* Desktop Navigation - visible on lg and above */}
+            <div className="hidden lg:flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
               {topNav.map((item) => {
                 const active = item.label === activeTopSection.label;
                 return (
@@ -182,22 +193,24 @@ export default function TrueNepalApp() {
             </div>
           </div>
         </motion.header>
+      </div>
 
+      <div className="flex-1 overflow-y-auto pb-24 lg:pb-0 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
           {page === "reels" && (
-            <motion.div key="reels" {...pageVariants} className="space-y-5">
-              <div className="max-w-xl">
+            <motion.div key="reels" {...pageVariants} className="space-y-2 sm:space-y-3">
+              <div className="sm:hidden max-w-full">
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search Pokhara, Begnas, Mustang..."
-                  className="h-11 rounded-2xl"
+                  className="h-9 rounded-2xl text-sm"
                 />
               </div>
               <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:items-start">
                 <div
                   ref={reelContainerRef}
-                  className="h-[min(720px,calc(100vh-18rem))] snap-y snap-mandatory overflow-y-auto rounded-2xl scrollbar-hide w-full"
+                  className="h-[min(600px,calc(100vh-12rem))] snap-y snap-mandatory overflow-y-auto rounded-2xl scrollbar-hide w-full"
                   style={{ scrollSnapType: "y mandatory" }}
                 >
                   {filteredReels.map((reel, index) => (
@@ -318,6 +331,43 @@ export default function TrueNepalApp() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Mobile/Tablet Bottom Navigation - visible on screen sizes below lg */}
+      <motion.nav
+        className="fixed bottom-0 left-0 right-0 lg:hidden border-t border-border bg-card/95 backdrop-blur shadow-2xl z-50"
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="mx-auto max-w-7xl px-2 py-3 flex justify-around items-center">
+          {topNav.map((item) => {
+            const active = item.label === activeTopSection.label;
+            return (
+              <button
+                key={item.label}
+                onClick={() => {
+                  if (item.page === "itinerary") {
+                    openPlanForReel(selectedReel?.id ?? activeReelId);
+                    return;
+                  }
+                  if (item.page === "my-trek") {
+                    openProfile("@mirage.shrestha");
+                    return;
+                  }
+                  setPage(item.page);
+                }}
+                className={`flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all ${
+                  active ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
+                }`}
+                title={item.label}
+              >
+                <item.icon className="h-6 w-6" />
+                <span className="text-xs font-medium">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </motion.nav>
     </div>
   );
 }

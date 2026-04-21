@@ -3,6 +3,11 @@ import everestImg from "@/assets/reels/everest.jpg";
 import langtangImg from "@/assets/reels/langtang.jpg";
 import mustangImg from "@/assets/reels/mustang.jpg";
 import poonhillImg from "@/assets/reels/poonhill.jpg";
+import koiliBusImg from "@/assets/services/koili-bus.png";
+import swiftHolidayBusImg from "@/assets/services/swift-holiday-bus.png";
+import hotelMountainTopImg from "@/assets/services/hotel-mountain-top.png";
+import cindermintCafeImg from "@/assets/services/cindermint-cafe.png";
+import tropicanaCafeImg from "@/assets/services/tropicana-cafe-v2.png";
 
 import { createSampleTrip } from "@/components/trip-upload/data";
 import type { ServiceMarketplaceCard, ServiceMarketplaceSectionData } from "@/components/services/types";
@@ -22,9 +27,8 @@ const hotelFeatured: ServiceMarketplaceCard = {
   rating: 4.5,
   tags: ["Lakeside", "Budget Stay", "Mountain View"],
   ctaPrimary: "View Stay Details",
-  ctaSecondary: "Book Again",
-  image: poonhillImg,
-  meta: ["Night 1: Rs 1,000", "Night 2: Rs 1,250", "Night 3: Rs 1,000"],
+  ctaSecondary: "Visit",
+  image: hotelMountainTopImg,
 };
 
 const hotelRecommendations: ServiceMarketplaceCard[] = [
@@ -41,8 +45,8 @@ const hotelRecommendations: ServiceMarketplaceCard[] = [
     rating: 4.6,
     tags: ["Breakfast", "Lakeside", "Balcony"],
     ctaPrimary: "View Details",
-    ctaSecondary: "Book Again",
-    image: annapurnaImg,
+    ctaSecondary: "Visit",
+    image: tropicanaCafeImg,
   },
   {
     id: "hotel-himalayan-view",
@@ -57,8 +61,8 @@ const hotelRecommendations: ServiceMarketplaceCard[] = [
     rating: 4.4,
     tags: ["Budget", "Mountain View", "Quiet"],
     ctaPrimary: "View Details",
-    ctaSecondary: "Book Again",
-    image: langtangImg,
+    ctaSecondary: "Visit",
+    image: cindermintCafeImg,
   },
   {
     id: "hotel-lakeside-retreat",
@@ -73,7 +77,7 @@ const hotelRecommendations: ServiceMarketplaceCard[] = [
     rating: 4.7,
     tags: ["Rooftop", "Modern", "Couple Friendly"],
     ctaPrimary: "View Details",
-    ctaSecondary: "Book Again",
+    ctaSecondary: "Visit",
     image: everestImg,
   },
 ];
@@ -91,7 +95,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "A laid-back cafe stop from your lakeside-to-Begnas day, ideal for a relaxed drink and scenic break.",
     rating: 4.4,
     tags: ["Cafe", "Begnas", "Scenic"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: annapurnaImg,
   },
   {
@@ -106,7 +110,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "Your New Year Eve spot with party energy, music, and a more premium spend from the itinerary.",
     rating: 4.8,
     tags: ["Party", "Music", "Lakeside"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: poonhillImg,
   },
   {
@@ -121,7 +125,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "A cafe breakfast stop from your Tuesday itinerary with a slower morning tone before kayaking.",
     rating: 4.6,
     tags: ["Breakfast", "Cafe", "Lakeside"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: langtangImg,
   },
   {
@@ -136,7 +140,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "A casual momo stop from your roam-around-Lakeside day with easy local comfort food.",
     rating: 4.5,
     tags: ["Local Food", "Momo", "Casual"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: mustangImg,
   },
   {
@@ -151,7 +155,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "A fuller Thakali meal stop that fits the dinner slot in your Tuesday spending history.",
     rating: 4.7,
     tags: ["Thakali", "Dinner", "Local Favorite"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: everestImg,
   },
   {
@@ -166,7 +170,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "Your return-trip lunch stop on the Pokhara to Kathmandu route with a road-trip break feel.",
     rating: 4.3,
     tags: ["Highway Stop", "Lunch", "Retreat"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: annapurnaImg,
   },
   {
@@ -181,7 +185,7 @@ const foodCards: ServiceMarketplaceCard[] = [
     description: "A practical road meal stop from the Kathmandu to Pokhara journey and one of the trip's first food spends.",
     rating: 4.2,
     tags: ["Road Stop", "Chicken", "Local Food"],
-    ctaPrimary: "Visit Again",
+    ctaPrimary: "Visit",
     image: mustangImg,
   },
 ];
@@ -199,8 +203,8 @@ const busCards: ServiceMarketplaceCard[] = [
     description: "Outbound ticket from Kathmandu to Pokhara for the start of your New Year trip.",
     rating: 4.2,
     tags: ["Seat A3", "7:00 AM", "Digital Ticket"],
-    ctaPrimary: "Rebook Ticket",
-    image: poonhillImg,
+    ctaPrimary: "Book",
+    image: koiliBusImg,
     meta: ["Company: Koili Bus", "Route: KTM -> Pokhara", "Date: Sunday"],
   },
   {
@@ -215,8 +219,8 @@ const busCards: ServiceMarketplaceCard[] = [
     description: "Return ticket used on the final day of the trip back toward Kathmandu.",
     rating: 4.3,
     tags: ["Seat B1", "8:00 AM", "Holiday Coach"],
-    ctaPrimary: "Rebook Ticket",
-    image: everestImg,
+    ctaPrimary: "Book",
+    image: swiftHolidayBusImg,
     meta: ["Company: Swift Holiday Bus", "Route: Pokhara -> KTM", "Date: Wednesday"],
   },
 ];
@@ -234,7 +238,7 @@ const localTransportCards: ServiceMarketplaceCard[] = [
     description: "The outbound local ride from Lakeside to Begnas Lake used on Monday.",
     rating: 4.7,
     tags: ["InDrive", "Lake Route", "Private Ride"],
-    ctaPrimary: "Book Similar Ride",
+    ctaPrimary: "Book",
     ctaSecondary: "Open Map",
     image: annapurnaImg,
   },
@@ -250,7 +254,7 @@ const localTransportCards: ServiceMarketplaceCard[] = [
     description: "The return local ride back to Lakeside after the Begnas day out.",
     rating: 4.7,
     tags: ["InDrive", "Return Trip", "Lakeside"],
-    ctaPrimary: "Book Similar Ride",
+    ctaPrimary: "Book",
     ctaSecondary: "Open Map",
     image: langtangImg,
   },
@@ -269,7 +273,7 @@ const activityCards: ServiceMarketplaceCard[] = [
     description: "A low-cost activity from your Tuesday itinerary and the clearest direct activity booking candidate from the trip.",
     rating: 4.8,
     tags: ["Outdoor", "Water", "Adventure"],
-    ctaPrimary: "Book Again",
+    ctaPrimary: "Book",
     ctaSecondary: "View Details",
     image: annapurnaImg,
     meta: ["Duration: 1.5 hours"],
@@ -287,7 +291,7 @@ const activityCards: ServiceMarketplaceCard[] = [
     rating: 4.7,
     tags: ["Lake View", "Relaxed", "Photo Stop"],
     ctaPrimary: "View Details",
-    ctaSecondary: "Book Again",
+    ctaSecondary: "Visit",
     image: poonhillImg,
     meta: ["Duration: Half day"],
   },
@@ -303,7 +307,7 @@ const activityCards: ServiceMarketplaceCard[] = [
     description: "A nightlife activity created from your highest single cafe spend and explicit New Year Eve itinerary note.",
     rating: 4.8,
     tags: ["Party", "Music", "New Year"],
-    ctaPrimary: "Book Again",
+    ctaPrimary: "Book",
     ctaSecondary: "View Details",
     image: mustangImg,
     meta: ["Duration: Evening"],

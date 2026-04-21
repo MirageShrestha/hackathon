@@ -3,8 +3,10 @@ import {
   ArrowRight,
   Bus,
   CarTaxiFront,
+  CheckCircle2,
   Heart,
   Hotel,
+  Landmark,
   Search,
   Sparkles,
   UtensilsCrossed,
@@ -14,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { SectionHeader } from "@/components/trekking/SectionHeader";
 import { buildRecentlyUsedServices, buildServiceSections } from "@/components/services/data";
@@ -37,10 +40,30 @@ const sectionIcons = {
   Activities: Waves,
 } as const;
 
+type BookingStep = "details" | "review" | "payment" | "success";
+type BookingKind = "hotel" | "bus";
+
 export const ServicesMarketplaceSection = () => {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<MarketplaceFilter>("all");
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [bookingCard, setBookingCard] = useState<ServiceMarketplaceCard | null>(null);
+  const [bookingStep, setBookingStep] = useState<BookingStep>("details");
+
+  const [hotelBooking, setHotelBooking] = useState({
+    guestName: "",
+    phone: "",
+    checkIn: "",
+    checkOut: "",
+    rooms: "1",
+  });
+  const [busBooking, setBusBooking] = useState({
+    passengerName: "",
+    phone: "",
+    travelDate: "",
+    seatCount: "1",
+    pickupPoint: "",
+  });
 
   useEffect(() => {
     const raw = window.localStorage.getItem(FAVORITES_STORAGE_KEY);
@@ -81,6 +104,59 @@ export const ServicesMarketplaceSection = () => {
   }, [filter, query, sections]);
 
   const hasResults = visibleSections.length > 0;
+
+  const bookingKind: BookingKind | null = useMemo(() => {
+    if (!bookingCard) return null;
+    if (bookingCard.category === "Hotels") return "hotel";
+    if (bookingCard.category === "Bus Tickets") return "bus";
+    return null;
+  }, [bookingCard]);
+
+  const isBookingOpen = bookingCard !== null;
+
+  const openBookingFlow = (card: ServiceMarketplaceCard) => {
+    if (card.category !== "Hotels" && card.category !== "Bus Tickets") return;
+    setBookingCard(card);
+    setBookingStep("details");
+  };
+
+  const closeBookingFlow = (open: boolean) => {
+    if (open) return;
+    setBookingCard(null);
+    setBookingStep("details");
+  };
+
+  const parsePrice = (priceLabel: string, fallback: number) => {
+    const parsed = Number(priceLabel.replace(/[^\d]/g, ""));
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+  };
+
+  const selectedPrice = bookingCard ? parsePrice(bookingCard.price, bookingCard.numericPrice) : 0;
+  const hotelTotal = selectedPrice * Number(hotelBooking.rooms || "1");
+  const busTotal = selectedPrice * Number(busBooking.seatCount || "1");
+  const bookingTotal = bookingKind === "hotel" ? hotelTotal : busTotal;
+  const serviceCharge = Math.round(bookingTotal * 0.03);
+  const grandTotal = bookingTotal + serviceCharge;
+
+  const canContinueFromDetails = (() => {
+    if (!bookingKind) return false;
+    if (bookingKind === "hotel") {
+      return Boolean(
+        hotelBooking.guestName.trim() &&
+          hotelBooking.phone.trim() &&
+          hotelBooking.checkIn &&
+          hotelBooking.checkOut &&
+          Number(hotelBooking.rooms) > 0,
+      );
+    }
+    return Boolean(
+      busBooking.passengerName.trim() &&
+        busBooking.phone.trim() &&
+        busBooking.travelDate &&
+        busBooking.pickupPoint.trim() &&
+        Number(busBooking.seatCount) > 0,
+    );
+  })();
 
   const toggleFavorite = (id: string) => {
     setFavoriteIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
@@ -171,6 +247,7 @@ export const ServicesMarketplaceSection = () => {
                     card={card}
                     favorite={favoriteIds.includes(card.id)}
                     onToggleFavorite={() => toggleFavorite(card.id)}
+                    onPrimaryAction={() => openBookingFlow(card)}
                   />
                 ))}
               </div>
@@ -178,6 +255,206 @@ export const ServicesMarketplaceSection = () => {
           );
         })
       )}
+
+      <Dialog open={isBookingOpen} onOpenChange={closeBookingFlow}>
+        <DialogContent className="max-w-2xl rounded-3xl p-0 overflow-hidden">
+          {!bookingCard || !bookingKind ? null : (
+            <div className="space-y-0">
+              <DialogHeader className="border-b border-border px-6 py-5">
+                <DialogTitle className="text-xl">Booking Flow</DialogTitle>
+                <DialogDescription>
+                  {bookingCard.title} - {bookingKind === "hotel" ? "Hotel Booking" : "Bus Ticket Booking"}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="px-6 pt-5">
+                <div className="mb-4 flex flex-wrap gap-2 text-xs font-medium">
+                  {["details", "review", "payment", "success"].map((step) => (
+                    <Badge
+                      key={step}
+                      variant={bookingStep === step ? "default" : "secondary"}
+                      className="rounded-full capitalize"
+                    >
+                      {step}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div className="px-6 pb-6">
+                {bookingStep === "details" && (
+                  <div className="space-y-4">
+                    {bookingKind === "hotel" ? (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Input
+                          value={hotelBooking.guestName}
+                          onChange={(event) => setHotelBooking((curr) => ({ ...curr, guestName: event.target.value }))}
+                          placeholder="Guest full name"
+                        />
+                        <Input
+                          value={hotelBooking.phone}
+                          onChange={(event) => setHotelBooking((curr) => ({ ...curr, phone: event.target.value }))}
+                          placeholder="Phone number"
+                        />
+                        <Input
+                          type="date"
+                          value={hotelBooking.checkIn}
+                          onChange={(event) => setHotelBooking((curr) => ({ ...curr, checkIn: event.target.value }))}
+                        />
+                        <Input
+                          type="date"
+                          value={hotelBooking.checkOut}
+                          onChange={(event) => setHotelBooking((curr) => ({ ...curr, checkOut: event.target.value }))}
+                        />
+                        <Input
+                          type="number"
+                          min={1}
+                          value={hotelBooking.rooms}
+                          onChange={(event) => setHotelBooking((curr) => ({ ...curr, rooms: event.target.value }))}
+                          placeholder="Rooms"
+                          className="sm:col-span-2"
+                        />
+                      </div>
+                    ) : (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Input
+                          value={busBooking.passengerName}
+                          onChange={(event) => setBusBooking((curr) => ({ ...curr, passengerName: event.target.value }))}
+                          placeholder="Passenger full name"
+                        />
+                        <Input
+                          value={busBooking.phone}
+                          onChange={(event) => setBusBooking((curr) => ({ ...curr, phone: event.target.value }))}
+                          placeholder="Phone number"
+                        />
+                        <Input
+                          type="date"
+                          value={busBooking.travelDate}
+                          onChange={(event) => setBusBooking((curr) => ({ ...curr, travelDate: event.target.value }))}
+                        />
+                        <Input
+                          type="number"
+                          min={1}
+                          value={busBooking.seatCount}
+                          onChange={(event) => setBusBooking((curr) => ({ ...curr, seatCount: event.target.value }))}
+                          placeholder="Seats"
+                        />
+                        <Input
+                          value={busBooking.pickupPoint}
+                          onChange={(event) => setBusBooking((curr) => ({ ...curr, pickupPoint: event.target.value }))}
+                          placeholder="Pickup point"
+                          className="sm:col-span-2"
+                        />
+                      </div>
+                    )}
+
+                    <div className="rounded-2xl bg-secondary/40 p-3 text-sm">
+                      <p className="font-medium text-foreground">Estimated Total: Rs {grandTotal.toLocaleString()}</p>
+                      <p className="text-muted-foreground">Includes 3% service charge. Static flow (demo only).</p>
+                    </div>
+                  </div>
+                )}
+
+                {bookingStep === "review" && (
+                  <div className="space-y-4 text-sm">
+                    <div className="rounded-2xl border border-border p-4">
+                      <p className="font-semibold text-foreground">{bookingCard.title}</p>
+                      <p className="text-muted-foreground">{bookingCard.location}</p>
+                      <p className="mt-2 text-foreground">Base Price: Rs {selectedPrice.toLocaleString()}</p>
+                    </div>
+                    {bookingKind === "hotel" ? (
+                      <div className="rounded-2xl bg-secondary/40 p-4">
+                        <p>Guest: {hotelBooking.guestName}</p>
+                        <p>Phone: {hotelBooking.phone}</p>
+                        <p>Check-in: {hotelBooking.checkIn}</p>
+                        <p>Check-out: {hotelBooking.checkOut}</p>
+                        <p>Rooms: {hotelBooking.rooms}</p>
+                      </div>
+                    ) : (
+                      <div className="rounded-2xl bg-secondary/40 p-4">
+                        <p>Passenger: {busBooking.passengerName}</p>
+                        <p>Phone: {busBooking.phone}</p>
+                        <p>Travel Date: {busBooking.travelDate}</p>
+                        <p>Seats: {busBooking.seatCount}</p>
+                        <p>Pickup: {busBooking.pickupPoint}</p>
+                      </div>
+                    )}
+                    <div className="rounded-2xl border border-dashed border-border p-4">
+                      <p>Subtotal: Rs {bookingTotal.toLocaleString()}</p>
+                      <p>Service Charge: Rs {serviceCharge.toLocaleString()}</p>
+                      <p className="font-semibold">Total: Rs {grandTotal.toLocaleString()}</p>
+                    </div>
+                  </div>
+                )}
+
+                {bookingStep === "payment" && (
+                  <div className="space-y-4">
+                    <div className="rounded-2xl bg-[#5C2D91] p-5 text-white">
+                      <div className="flex items-center justify-between">
+                        <p className="text-lg font-semibold">Khalti Wallet</p>
+                        <Landmark className="h-5 w-5" />
+                      </div>
+                      <p className="mt-3 text-sm text-white/80">This is a static payment screen for now.</p>
+                      <div className="mt-4 rounded-xl bg-white/15 p-3">
+                        <p className="text-sm">Merchant: Sojourner Services</p>
+                        <p className="text-xl font-bold">Rs {grandTotal.toLocaleString()}</p>
+                      </div>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                        <Input value="9800000000" readOnly className="bg-white/90 text-black" />
+                        <Input value="****" readOnly className="bg-white/90 text-black" />
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Demo mode: clicking "Pay with Khalti" completes the mock booking without real transaction.
+                    </p>
+                  </div>
+                )}
+
+                {bookingStep === "success" && (
+                  <div className="space-y-3 text-center">
+                    <CheckCircle2 className="mx-auto h-12 w-12 text-green-600" />
+                    <p className="text-lg font-semibold text-foreground">
+                      {bookingKind === "hotel" ? "Hotel booked successfully!" : "Bus ticket booked successfully!"}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Payment marked as completed via static Khalti screen.
+                    </p>
+                    <div className="rounded-2xl bg-secondary/40 p-4 text-left text-sm">
+                      <p className="font-medium">Booking ID: SJ-{bookingCard.id.toUpperCase()}</p>
+                      <p>Amount Paid: Rs {grandTotal.toLocaleString()}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-6 flex flex-wrap justify-end gap-2">
+                  {bookingStep !== "details" && bookingStep !== "success" && (
+                    <Button variant="outline" onClick={() => setBookingStep(bookingStep === "payment" ? "review" : "details")}>
+                      Back
+                    </Button>
+                  )}
+                  {bookingStep === "details" && (
+                    <Button disabled={!canContinueFromDetails} onClick={() => setBookingStep("review")}>
+                      Continue
+                    </Button>
+                  )}
+                  {bookingStep === "review" && <Button onClick={() => setBookingStep("payment")}>Proceed to Payment</Button>}
+                  {bookingStep === "payment" && <Button onClick={() => setBookingStep("success")}>Pay with Khalti</Button>}
+                  {bookingStep === "success" && (
+                    <Button
+                      onClick={() => {
+                        setBookingCard(null);
+                        setBookingStep("details");
+                      }}
+                    >
+                      Done
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
@@ -186,12 +463,16 @@ const ServiceCard = ({
   card,
   favorite,
   onToggleFavorite,
+  onPrimaryAction,
 }: {
   card: ServiceMarketplaceCard;
   favorite: boolean;
   onToggleFavorite: () => void;
-}) => (
-  <Card className="overflow-hidden border-border shadow-none transition-all hover:-translate-y-1 hover:shadow-xl">
+  onPrimaryAction: () => void;
+}) => {
+  const canBook = card.category === "Hotels" || card.category === "Bus Tickets";
+  return (
+    <Card className="overflow-hidden border-border shadow-none transition-all hover:-translate-y-1 hover:shadow-xl">
     <div className="relative">
       <img src={card.image} alt={card.title} className="h-52 w-full object-cover" />
       <button
@@ -236,14 +517,17 @@ const ServiceCard = ({
       </div>
 
       <div className="flex gap-2">
-        <Button className="flex-1 rounded-2xl">{card.ctaPrimary}</Button>
+        <Button className="flex-1 rounded-2xl" onClick={onPrimaryAction}>
+          {canBook ? "Book" : "Visit"}
+        </Button>
         <Button variant="outline" className="rounded-2xl">
-          {card.ctaSecondary ?? "Open Map"}
+          {canBook ? "Visit" : "Book"}
         </Button>
       </div>
     </CardContent>
   </Card>
-);
+  );
+};
 
 const MiniServiceCard = ({
   card,

@@ -15,6 +15,10 @@ const getMapEmbedUrl = (mapData: ReelMapData) => {
     return `https://www.google.com/maps/embed/v1/directions?key=${googleMapsApiKey}&origin=${encodeURIComponent(mapData.stops[0]?.name ?? mapData.destination)}&destination=${encodeURIComponent(mapData.destination)}&waypoints=${encodeURIComponent(mapData.stops.slice(1, -1).map((stop) => stop.name).join("|"))}`;
   }
 
+  if (mapData.googleMapsUrl?.includes("/maps/dir/")) {
+    return `${mapData.googleMapsUrl}${mapData.googleMapsUrl.includes("?") ? "&" : "?"}output=embed`;
+  }
+
   const query = mapData.embedQuery ?? mapData.destination;
   return `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=9&output=embed`;
 };

@@ -4,10 +4,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { SectionHeader } from "@/components/trekking/SectionHeader";
 import { createSampleTrip, loadStoredTrips } from "@/components/trip-upload/data";
 import { calculateBudgetTotals, categoryLabels, formatCurrency } from "@/components/trip-upload/helpers";
 import type { BudgetCategory } from "@/components/trip-upload/types";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { MY_TREK_STORAGE_KEY, getDefaultMyTrekStore } from "@/components/my-trek/data";
+import type { TrekPost } from "@/components/my-trek/types";
 
 interface ItinerarySectionProps {
   onOpenStories: () => void;
@@ -103,6 +108,49 @@ const getActiveTemplate = (selectedPlanId?: string): ItineraryTemplate => {
 export const ItinerarySection = ({ onOpenStories, selectedPlanId }: ItinerarySectionProps) => {
   const activeTrip = getActiveTemplate(selectedPlanId);
   const totals = calculateBudgetTotals(activeTrip);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleCheckout = () => {
+    // Load current trek store
+    const raw = localStorage.getItem(MY_TREK_STORAGE_KEY);
+    let store = getDefaultMyTrekStore();
+    
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as Partial<typeof store>;
+        store = { ...store, ...parsed };
+      } catch (error) {
+        console.error('Failed to parse trek store:', error);
+      }
+    }
+
+    // Create new trek post
+    const newTrek: TrekPost = {
+      id: `saved-${Date.now()}`,
+      ownerHandle: store.profile.handle,
+      title: activeTrip.tripTitle,
+      destination: activeTrip.destination,
+      date: `${activeTrip.startDate} - ${activeTrip.endDate}`,
+      budgetLabel: formatCurrency(totals.grandTotal),
+      budgetValue: totals.grandTotal,
+      description: activeTrip.description,
+      status: "Draft", // Save as draft initially
+      coverImage: "", // Could be enhanced to include an image
+    };
+
+    // Add to treks array
+    store.treks = [newTrek, ...store.treks];
+
+    // Save back to localStorage
+    localStorage.setItem(MY_TREK_STORAGE_KEY, JSON.stringify(store));
+
+    toast({
+      title: "Plan Saved!",
+      description: `Your ${activeTrip.tripTitle} has been saved to your trek profile.`,
+    });
+    setIsCheckoutOpen(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -184,6 +232,56 @@ export const ItinerarySection = ({ onOpenStories, selectedPlanId }: ItinerarySec
                 <span className="font-semibold">Grand total</span>
                 <span className="text-base font-bold">{formatCurrency(totals.grandTotal)}</span>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border shadow-none">
+            <CardHeader>
+              <CardTitle className="text-base">Save to My Trek</CardTitle>
+              <CardDescription>Save this plan to your trek profile for future reference and planning.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Dialog open={isCheckoutOpen} onOpenChange={setIsCheckoutOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full rounded-2xl" variant="default">
+                    Save Plan
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Save Plan to My Trek</DialogTitle>
+                    <DialogDescription>
+                      Review your trip details and save this plan to your trek profile for future reference.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <span className="col-span-2 font-medium">Trip:</span>
+                      <span className="col-span-2">{activeTrip.tripTitle}</span>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <span className="col-span-2 font-medium">Destination:</span>
+                      <span className="col-span-2">{activeTrip.destination}</span>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <span className="col-span-2 font-medium">Duration:</span>
+                      <span className="col-span-2">{activeTrip.startDate} to {activeTrip.endDate}</span>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <span className="col-span-2 font-medium">Total Cost:</span>
+                      <span className="col-span-2 font-bold">{formatCurrency(totals.grandTotal)}</span>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setIsCheckoutOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="button" onClick={handleCheckout}>
+                      Save to My Trek
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
 
